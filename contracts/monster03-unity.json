@@ -25,6 +25,15 @@
     "channels": ["base_color", "normal"],
     "vertex_attributes": ["POSITION", "NORMAL", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0", "TANGENT"]
   },
+  "rig_constraints": {
+  "head": "Bone01",
+  "jaw": "Bone02",
+  "jaw_limits": {
+    "min_rotation_x": -35.0,
+    "max_rotation_x": 0.0
+  },
+  "separate_mouth_mesh": true
+},
   "must_measure_in_unity": [
     "model importer accepts GLB or a controlled conversion is required",
     "world-space height and footprint against legacy prefab",
