@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-engine-20261019t004445z",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-19T00:44:45+00:00",
+  "finished_at": "2026-10-19T00:45:01+00:00",
+  "goal": "Build and audit a complete monster candidate from a reproducible asset profile",
+  "actor": "monster_engine.py",
+  "environment": {
+    "blender": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+    "python": "3.9.13"
+  },
+  "parameters": {
+    "profile": "profiles/monster03.json",
+    "profile_sha256": "D4016C31954322129F919109B6339421E8708484E6A4A0FC1473402C6C7617FB",
+    "builder": "tools/build_hd_jaw_gradient_test.py",
+    "candidate_sha256": "275036480A05FDA7E0ABC14940DFAE16E9A785DFF7FE204E270F153790A5E295",
+    "release_status": "blocked"
+  },
+  "inputs": [
+    "work/monster03/budge-dragon-baseline-v2.blend",
+    "profiles/monster03.json",
+    "tools/build_hd_jaw_gradient_test.py"
+  ],
+  "steps": [
+    "Run asset-specific Blender builder",
+    "Audit LODs, UVs, materials, weights, regions and every action frame",
+    "Render full-body action pose sheet",
+    "Record hashes and quality gates"
+  ],
+  "outputs": [
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/candidate.blend",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/poses/full-body-actions.png",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/poses/frames.json",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/provenance.json",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/build.log",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.log",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/render.log",
+    "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/compose.log"
+  ],
+  "observations": [
+    "A built candidate is not automatically approved.",
+    "Pending human gates: head_and_mouth_in_motion, body_wing_tail_silhouette, game_camera_materials, unity_ingame"
+  ],
+  "checks": [
+    {
+      "name": "mesh:LOD0",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "uv:LOD0",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "materials:LOD0",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "weights:LOD0",
+      "result": "fail",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "mesh:LOD1",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "uv:LOD1",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "materials:LOD1",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "weights:LOD1",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "mesh:LOD2",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "uv:LOD2",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "materials:LOD2",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "weights:LOD2",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:head",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:jaw",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:left_wing",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:right_wing",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:tail",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "region:legs",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action00",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action00",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action01",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action01",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action02",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action02",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action03",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action03",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action04",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action04",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action05",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action05",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "action:action06",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "finite_deformation:action06",
+      "result": "pass",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "mouth_interior",
+      "result": "fail",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    },
+    {
+      "name": "release",
+      "result": "manual",
+      "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004445z/audit.json"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-concept-study-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "concept",
+  "status": "completed",
+  "started_at": "2026-10-18T21:01:00-03:00",
+  "finished_at": "2026-10-18T21:02:00-03:00",
+  "goal": "Produce a visual reference for anatomically articulated, realistic Budge Dragon head treatment",
+  "actor": "Codex",
+  "environment": {"generator": "OpenAI built-in image_gen", "blender": "5.2.2 LTS"},
+  "parameters": {"reference_priority": "Original BMD silhouette first; inherited HD attempt second", "prompt_record": "work/monster03/concepts/budge-head-realism-study01.json"},
+  "inputs": ["work/monster03/original-renders/action00-frame00-side.png", "work/monster03/diagnostic-renders/action00-frame00-side.png"],
+  "steps": ["Generated one side/front concept board anchored to the BMD and inherited HD references.", "Copied the generated image into the project and recorded its hash, role and limitations."],
+  "outputs": ["work/monster03/concepts/budge-head-realism-study01.png", "work/monster03/concepts/budge-head-realism-study01.json"],
+  "observations": ["The board gives useful anatomy/material direction but does not solve geometry or prove identity fidelity.", "Original BMD proportions, bone hierarchy and animation remain technical ground truth."],
+  "checks": [
+    {"name": "visual concept available locally with provenance", "result": "pass", "evidence": "work/monster03/concepts/budge-head-realism-study01.json"},
+    {"name": "identity and production topology approved", "result": "unknown", "evidence": "work/monster03/concepts/budge-head-realism-study01.png"}
+  ]
+}

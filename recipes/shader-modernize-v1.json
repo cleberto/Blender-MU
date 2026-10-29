@@ -1,0 +1,14 @@
+{
+  "id": "shader-modernize-v1",
+  "revision": 1,
+  "status": "proposed",
+  "scope": ["shader", "material"],
+  "stages": [
+    {"id": "baseline", "output": "Existing shader/material and matched test scene", "gate": "Render engine, client version and appearance recorded"},
+    {"id": "design", "output": "Node/code graph and parameter table", "gate": "Look goals and compatibility specified"},
+    {"id": "implementation", "output": "Versioned shader/material", "gate": "Compilation and texture channel checks pass"},
+    {"id": "comparison", "output": "Matched screenshots under multiple lighting conditions", "gate": "Color, highlights, transparency and glow reviewed"},
+    {"id": "performance", "output": "GPU/frame-time measurements", "gate": "Budget judged in representative scene"}
+  ],
+  "defaults": {"color_space": "record explicitly", "engine": "record explicitly", "performance_budget": "set per client"}
+}

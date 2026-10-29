@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster44",
+  "version": "v0001",
+  "status": "reference",
+  "created_at": "2026-10-18T20:20:00-03:00",
+  "parent_version": null,
+  "goal": "Catalog supplied Bloody Wolf GLB without claiming local reproduction or approval.",
+  "recipe": null,
+  "recipe_sha256": null,
+  "parameters": {"source_manifest": "examples/monster44.yaml", "source_manifest_sha256": "379ada59459965a8e42dc2e15827ab2eda6c2c89a83983663694a9dbd2c1b1f3", "exact_generation_environment": "unknown"},
+  "dependencies": [],
+  "artifacts": [{"role": "reference_glb", "path": "models/bloody-wolf-hd.glb", "sha256": "984e7d1250756cfa1a142d66e11d9b33e97044f7462171e4083b3d11f60f27c1"}],
+  "runs": [],
+  "issues": ["Original BMD and textures are not present in this project.", "Supplied generation tool and environment are not included."],
+  "quality": {"required": [], "results": []},
+  "review": {"decision": "pending", "by": null, "at": null, "evidence": ["demo/wolf-final-views.png"], "notes": "Reference only."}
+}

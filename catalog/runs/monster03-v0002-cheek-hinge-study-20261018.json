@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-cheek-hinge-study-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T21:08:00-03:00",
+  "finished_at": "2026-10-18T21:10:00-03:00",
+  "goal": "Test whether a small weighted cheek web can visually attach the trial mandible to the skull through opening poses",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {"script": "tools/experiment_cheek_hinge.py", "bones": ["Bip01 Head", "Bone02"], "intermediate_weight": 0.5, "patches": 2, "vertices_per_patch": 9},
+  "inputs": ["work/monster03/v0002-jaw-rotation-floor-test.blend"],
+  "steps": ["Built two thin side cheek bands, weighted from upper skull to jaw.", "Rendered idle and attack poses, including the extreme action01 frame25."],
+  "outputs": ["work/monster03/v0002-cheek-hinge-study.blend", "work/monster03/cheek-hinge-study-report.json", "work/monster03/diagnostic-renders/cheek-hinge-study/action03-frame00-side.png", "work/monster03/diagnostic-renders/cheek-hinge-study/action01-frame25-side.png"],
+  "observations": ["The flat patches read as cardboard flaps and cannot substitute for a cheek/temporal volume with edge flow around the jaw joint.", "Bone02 translation is near zero in the problematic action01 frames; the visually displaced jaw comes from rotation and missing connective anatomy."],
+  "checks": [
+    {"name": "cheek attachment looks anatomical in attack", "result": "fail", "evidence": "work/monster03/diagnostic-renders/cheek-hinge-study/action03-frame00-side.png"},
+    {"name": "hinge remains coherent in action01 frame25", "result": "fail", "evidence": "work/monster03/diagnostic-renders/cheek-hinge-study/action01-frame25-side.png"}
+  ]
+}

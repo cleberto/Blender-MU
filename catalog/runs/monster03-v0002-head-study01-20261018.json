@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-head-study01-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T20:47:00-03:00",
+  "finished_at": "2026-10-18T20:57:00-03:00",
+  "goal": "Test independent upper and lower head anatomy driven by the existing HD armature and actions",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "gpu": "NVIDIA GeForce GTX 1080 Ti 11 GiB"},
+  "parameters": {
+    "script": "tools/build_head_study.py",
+    "source_scene": "work/monster03/budge-dragon-baseline-v2.blend",
+    "upper_bone": "Bip01 Head",
+    "lower_bone": "Bone02",
+    "cross_section_ring_vertices": 24,
+    "subdivision_viewport": 1,
+    "subdivision_render": 2,
+    "source_bounds": "Measured BMD jaw island and inherited HD head"
+  },
+  "inputs": ["assets/original/monster03/Monster03.bmd", "models/budge-dragon-hd.glb", "work/monster03/budge-dragon-baseline-v2.blend"],
+  "steps": [
+    "Created independent maxilla and mandible lofts, simple teeth, eyes, brows and nostrils.",
+    "Bound the upper anatomy to Bip01 Head and the mandible to Bone02 on the inherited armature.",
+    "Rendered side and front views at idle and attack actions 3/4, frames 0 and 3."
+  ],
+  "outputs": [
+    "work/monster03/v0002-head-study-01.blend",
+    "work/monster03/head-study-01-report.json",
+    "work/monster03/diagnostic-renders/head-study-01/action03-frame00-side.png",
+    "work/monster03/diagnostic-renders/head-study-01/action03-frame00-front.png",
+    "docs/monster03-v0002-experiments.md"
+  ],
+  "observations": [
+    "The jaw opens in sampled attack poses without the previous cheek tear, but a later all-action sweep found tip crossings at intermediate frames.",
+    "The head is an isolated graybox with a smooth generic profile, crude eyes and teeth, no neck graft or production mouth tissues.",
+    "Do not promote this study to asset v0002 or export it as a finished dragon."
+  ],
+  "checks": [
+    {"name": "animated separation without tear in sampled attack pose", "result": "pass", "evidence": "work/monster03/diagnostic-renders/head-study-01/action03-frame00-side.png"},
+    {"name": "no mouth intersection across all seven actions", "result": "fail", "evidence": "work/monster03/diagnostic-renders/head-study-01/action03-frame02-side.png"},
+    {"name": "production anatomy and original identity", "result": "fail", "evidence": "work/monster03/diagnostic-renders/head-study-01/action00-frame00-side.png"},
+    {"name": "body graft, UV, PBR, LOD and export", "result": "unknown", "evidence": "work/monster03/head-study-01-report.json"}
+  ]
+}

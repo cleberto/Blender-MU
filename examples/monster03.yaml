@@ -1,0 +1,91 @@
+# Budge Dragon: DRAFT (2026-10-14, from Monster03.bmd and the client sources; no stage run yet). The operator's
+# second-monster pick. Its wing membranes are an alpha card mesh (p_d.tga); the roles in `meshes` follow slot 2's
+# client findings (HANDOFF.md (b)); no stage builds cards yet. No client work is needed. Fire breath: bone 7
+# (Bip01 Head) on attack 1 (keep the MU bone indices). Read HANDOFF.md first.
+kind: monster
+asset: monster03
+label: Budge Dragon
+bmd: Monster/Monster03.bmd
+texture_dirs: [Monster]
+pose: [0, 0]            # DRAFT: action 0 key 0 (idle, 6 keys); check the wings stay clear of the body (stage 1)
+budget: 6000
+client:
+  model: MODEL_BUDGE_DRAGON
+  index: 2              # MONSTER_MODEL_BUDGE_DRAGON (_enum.h); server monster 2, Lorencia (Golden Budge Dragon: x0.7)
+  scale: 0.5            # CreateMonster MONSTER_BUDGE_DRAGON Object.Scale
+  play_speed: [0.25, 0.2, 0.7, 0.33, 0.33, 0.5, 0.55]   # OpenMonsterModel defaults + walk 0.7 (flying flap)
+  hold_last_actions: [6]
+# actions (keys): 0 idle 6, 1 idle2 30, 2 walk 7 (LockPositions), 3 attack1 7 (fire breath from bone 7), 4 attack2 7,
+# 5 shock 7, 6 die 7
+
+meshes:
+  - {index: 0, texture: p_d.jpg, role: body}       # 324 tris: body, head, neck, legs, tail (163 vertices)
+  - {index: 1, texture: p_d.tga, role: body, name: wings, generated: true, skin_limbs: true, skin_radius: 0.15}
+    # 8 tris, 12 vertices: the two wing membranes (alpha 52 % < 128), skinned to UpperArm/Forearm and Spine.
+    # Operator 2026-10-15: KEEP Omni's solid 3D wings (no wing card): a generated part, body for Omni, the refs
+    # and the IoU; the generated wings take their skin from this mesh (gameready.part_skin); one RGB atlas.
+
+bones:
+  head: ["Bip01 Head", "Bone01", "Bone02", "Bone03"]   # BoneHead 7; Bone01-03 under the head (horns / jaw chain)
+  neck: ["Bip01 Neck", "Bip01 Neck1", "Bip01 Neck2"]
+  jaw: []                                              # DRAFT: Bone01-03 may be the jaw; check in the rest pose
+  hands: ["Bip01 L Hand", "Bip01 R Hand"]              # the wing tips (no body vertices on the hands)
+  feet: ["Bip01 L Foot", "Bip01 R Foot", "Bip01 L Toe0", "Bip01 R Toe0", "Bip01 L Toe01", "Bip01 R Toe01"]
+  sockets: ["Bip01 Head"]
+  limb_roots: ["Bip01 L Thigh", "Bip01 R Thigh", "Bip01 L Clavicle", "Bip01 R Clavicle", "Bip01 Tail"]
+  rigid: []
+  wings: ["Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand",
+          "Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand"]   # the arms ARE the wings
+  tail: ["Bip01 Tail", "Bip01 Tail1", "Bip01 Tail2", "Bip01 Tail3"]
+  spikes: {bones: [], min_z: null}
+  smooth_exclude: ["Bip01 L Foot", "Bip01 R Foot", "Bip01 L Toe0", "Bip01 R Toe0", "Bip01 L Toe01", "Bip01 R Toe01",
+                   "Bip01 L Forearm", "Bip01 R Forearm", "Bip01 Tail3"]
+  seam: ["Bip01 Neck1", "Bip01 Neck2"]
+
+concept:
+  subject: "the Budge Dragon, a small red baby dragon with raised bat wings"
+  detail: "red and orange skin with small overlapping scales and darker brown markings, a lighter belly, a horned head with big eyes and a snout with small teeth, thin red membrane wings stretched between the wing bones, a long tapering tail, short clawed legs"
+  refine_prompt: null    # generic refine prompt from `subject`
+
+picks: {concept: qwen-faithful-s22, omni_seed: 1, head_candidate: null}   # MANUAL (the driver stops for each; concept: operator 2026-10-15, demo sheet "concept B")
+
+names:
+  prefix: null           # omni-<level>
+
+budgets:
+  lod_triangles: [6000, 2000, 800]   # DRAFT: small in game (x0.5); the body only, the wing cards come on top
+  head_share: 0.22                    # DRAFT: big head, seen from above
+  head_share_min: 0.17
+  density: {head: 2.0, hands: 1.0, spikes: 1.0, body: 1.0}
+
+head:
+  enabled: false         # operator 2026-10-15: no head pass (small mob at x0.5; keep the Omni head)
+
+depth:
+  tile_mu_per_px: 0.12   # DRAFT: recompute from the concept's framing (the dragon is ~180 MU tall with the wings)
+
+face:
+  enabled: false         # operator 2026-10-15: no face pass (the head stays as Omni made it; he may veto)
+  landmarks: {}
+  passes: []
+
+look:
+  name: lookC2
+  params: {form: 0.5, ao_power: 2.0, darken: 1.0, lift: 0.0, bleed: true}   # DRAFT: no fur lift on scales
+
+lighting: null           # set after the in-game round (slot 2's per-model sky / normalScale)
+
+# Operator 2026-10-16: the four gameready-stage FAILs pass by the in-game acceptance ("wings are fine", verdict
+# commit 8b2b4d2 on the spike branch). The concept redraws the dragon upright with bigger wings, so the BMD-silhouette
+# gates fail by design; the two piece-count FAILs exist only in the base lineage (a small closed piece at the left
+# wing's forearm, merged by smoothing: the accepted lineage's dense and LODs are one piece each).
+gates:
+  decisions:
+    shape/dense-silhouette-iou: "operator 2026-10-16: passes by the in-game acceptance (\"wings are fine\", 2026-10-15, spike commit 8b2b4d2); the concept redraws the outline"
+    shape/dense-chamfer: "operator 2026-10-16: passes by the in-game acceptance (\"wings are fine\", 2026-10-15, spike commit 8b2b4d2); the concept redraws the outline"
+    shape/dense-components: "operator 2026-10-16: \"yes, treat as user accepted\": the in-game acceptance (\"wings are fine\", spike commit 8b2b4d2) extended to the base lineage's piece count (2: a small closed piece at the left wing's forearm; smoothing merges it)"
+    gameready/lod-closed: "operator 2026-10-16: \"yes, treat as user accepted\": the in-game acceptance (\"wings are fine\", spike commit 8b2b4d2) extended to the base lineage's LOD piece count (2/2/2; the accepted lineage's LODs are 1/1/1)"
+
+stages:
+  smooth: {note: "DRAFT: smoothing masks must exclude the wing card's bones (bones.wings) and the tail tip"}
+  ingame: {verdict: "operator 2026-10-15: accepted (\"wings are fine\"); slot 2 captures in spike 3's root, ingame/captures/monster03 (client 1911c693, Chaos Castle 1 + Lorencia): drawn from the GLB, wings follow the bones with no tears at any LOD, fire breath from bone 7 identical (animtrace diff 0), default camera LOD1 / zoom LOD0; slightly darker than the BMD (p50 0.224 vs 0.263); small light spot at each wing root (texture seam), not fixed"}

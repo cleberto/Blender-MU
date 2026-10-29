@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-unity-probe-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "ingame",
+  "status": "failed",
+  "started_at": "2026-10-18T20:46:00-03:00",
+  "finished_at": "2026-10-18T20:48:00-03:00",
+  "goal": "Probe GLB model import in the installed Unity Editor without modifying the main client",
+  "actor": "Codex",
+  "environment": {"unity": "6000.7.0b1", "test_project": "work/unity-glb-spike", "main_client_modified": false},
+  "parameters": {"asset": "models/budge-dragon-hd.glb", "method": "batchmode Editor AssetDatabase.ImportAsset"},
+  "inputs": ["models/budge-dragon-hd.glb", "contracts/monster03-unity.json"],
+  "steps": [
+    "Created a minimal disposable Unity project under work/unity-glb-spike and copied the reference GLB.",
+    "Ran Unity batchmode with an Editor method that reports importer and main asset types.",
+    "First run could not connect to local Package Manager; elevated retry reached Unity licensing and stopped before asset import."
+  ],
+  "outputs": ["work/unity-glb-spike/Assets/Editor/GlbProbe.cs", "work/unity-glb-spike/unity-probe-escalated.log"],
+  "observations": [
+    "Unity reports: No valid Unity Editor license found; exit code 198 in log.",
+    "GLB import support and parity are still unknown; neither pass nor fail can be inferred from licensing failure."
+  ],
+  "checks": [
+    {"name": "Unity license available", "result": "fail", "evidence": "work/unity-glb-spike/unity-probe-escalated.log"},
+    {"name": "GLB imports as skinned model", "result": "unknown", "evidence": "Editor exited before import probe"}
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-body-preservation-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "rig",
+  "status": "completed",
+  "started_at": "2026-10-18T21:50:35-03:00",
+  "finished_at": "2026-10-18T21:50:35-03:00",
+  "goal": "Verify that the candidate keeps inherited body, wing and tail data while changing only local jaw skinning",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "python": "3.9"},
+  "parameters": {"fingerprint_script": "tools/fingerprint_monster_scene.py", "compare_script": "tools/compare_monster_fingerprints.py", "candidate_run": "monster03-v0002-engine-20261019t004613z"},
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "work/monster03/engine-runs/monster03-v0002-engine-20261019t004613z/candidate.blend"],
+  "steps": ["Fingerprint geometry, UV, weights, actions and packed images in the inherited baseline", "Fingerprint the candidate with the same script", "Compare signatures and list skin-weight vertex differences"],
+  "outputs": ["work/monster03/baseline-fingerprint.json", "work/monster03/engine-runs/monster03-v0002-engine-20261019t004613z/fingerprint.json", "work/monster03/engine-runs/monster03-v0002-engine-20261019t004613z/preservation.json"],
+  "observations": ["LOD0/1/2 geometry and UVs match the inherited baseline exactly.", "All seven action keyframe signatures and all packed image signatures match.", "LOD1/2 weights match exactly; LOD0 changes weights on 143 vertices around the mouth, including one vertex pruned from five to four influences.", "Data preservation is not a visual deformation approval; the mouth still fails."],
+  "checks": [
+    {"name": "body data preservation", "result": "pass", "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004613z/preservation.json"},
+    {"name": "all action visual quality", "result": "manual", "evidence": "work/monster03/engine-runs/monster03-v0002-engine-20261019t004613z/poses/full-body-actions.png"},
+    {"name": "jaw anatomy", "result": "fail", "evidence": "work/monster03/diagnostic-renders/hd-jaw-gradient-test/action03-frame00-side.png"}
+  ]
+}

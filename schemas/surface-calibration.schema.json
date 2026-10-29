@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mu-asset-lab.local/schemas/surface-calibration.schema.json",
+  "type": "object",
+  "required": ["schema_version", "profile_type", "asset_id", "version", "study_id", "lods", "preserve", "human_gates"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "profile_type": {"const": "surface_calibration"},
+    "asset_id": {"type": "string"},
+    "version": {"type": "string", "pattern": "^v[0-9]{4}$"},
+    "study_id": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+    "scope": {"type": "string"},
+    "lods": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["roughness", "specular_ior_level", "normal_strength"],
+        "additionalProperties": false,
+        "properties": {
+          "roughness": {"type": "number", "minimum": 0, "maximum": 1},
+          "specular_ior_level": {"type": "number", "minimum": 0, "maximum": 1},
+          "normal_strength": {"type": "number", "minimum": 0, "maximum": 4}
+        }
+      }
+    },
+    "preserve": {"type": "array", "items": {"type": "string"}},
+    "not_covered": {"type": "array", "items": {"type": "string"}},
+    "human_gates": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  }
+}

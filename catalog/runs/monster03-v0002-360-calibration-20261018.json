@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-360-calibration-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "reference",
+  "status": "completed",
+  "started_at": "2026-10-18T21:11:00-03:00",
+  "finished_at": "2026-10-18T21:20:00-03:00",
+  "goal": "Compare inherited HD dragon and our trial head under identical 360-degree camera/light conditions and recalibrate production strategy",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "render_engine": "BLENDER_EEVEE", "gpu": "NVIDIA GeForce GTX 1080 Ti 11 GiB"},
+  "parameters": {"script": "tools/render_turntable.py", "package_script": "tools/build_turntable_comparison.py", "steps": 24, "angle_degrees": 15, "resolution": [640, 640], "action": "action00", "frame": 0, "head_ortho_scale": 90, "full_ortho_scale": 265, "exposure": 3.0},
+  "inputs": ["models/budge-dragon-hd.glb", "work/monster03/budge-dragon-baseline-v2.blend", "work/monster03/v0002-jaw-rotation-floor-test.blend"],
+  "steps": ["Rendered inherited HD head and full body at 24 matched angles.", "Rendered the isolated trial head with the identical head camera and lighting protocol.", "Packaged synchronized HTML and animated GIF comparisons.", "Inspected front, rear, left and right profiles and recorded preserve/rebuild decisions."],
+  "outputs": ["work/monster03/turntable/comparison.html", "work/monster03/turntable/head-comparison-360.gif", "work/monster03/turntable/legacy-full-360.gif", "work/monster03/turntable/comparison-report.json", "work/monster03/hd-components.json", "docs/monster03-360-calibration.md", "knowledge/lessons/monster03-preserve-hd-visual.json"],
+  "observations": ["Inherited HD shape, eye socket, horn roots, neck, wings, tail and material palette are far superior to the parametric study and should be preserved.", "Our trial is head-only with generic smooth form, missing horn/neck integration and no production surface; it cannot be compared as a complete dragon.", "The inherited mouth remains shut or unreadable; that local anatomical/rig problem is the production target.", "A dark hip region appears in some full-body angles; geometry cause is unverified."],
+  "checks": [
+    {"name": "matched 24-angle head comparisons", "result": "pass", "evidence": "work/monster03/turntable/comparison-report.json"},
+    {"name": "full inherited dragon 360", "result": "pass", "evidence": "work/monster03/turntable/legacy-full-360.gif"},
+    {"name": "ours is a complete dragon", "result": "fail", "evidence": "work/monster03/turntable/head-comparison-360.gif"},
+    {"name": "all-action jaw quality", "result": "fail", "evidence": "catalog/runs/monster03-v0002-action-sweep-20261018.json"}
+  ]
+}

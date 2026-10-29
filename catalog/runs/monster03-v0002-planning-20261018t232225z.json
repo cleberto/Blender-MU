@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-planning-20261018t232225z",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "planning",
+  "status": "completed",
+  "started_at": "2026-10-18T23:22:25+00:00",
+  "finished_at": "2026-10-18T23:23:00+00:00",
+  "goal": "Define versioned jaw-repair experiment and quality gates",
+  "actor": "Codex",
+  "environment": {"workspace": "D:\\source\\Blender", "registry_schema": 1},
+  "parameters": {
+    "inherited_from": "v0001",
+    "baseline": {
+      "source_manifest": "examples/monster03.yaml",
+      "source_manifest_sha256": "43bfc0366197e3c004d25648cc15294ef0ed716f55db55d32c9734a300fbd8b8",
+      "concept_pick": "qwen-faithful-s22",
+      "omni_seed": 1,
+      "head_pass": false,
+      "face_pass": false,
+      "jaw_bones_declared": [],
+      "look": "lookC2",
+      "lod_triangles": [
+        6002,
+        2002,
+        802
+      ],
+      "client_scale": 0.5,
+      "blender_generation_version": "unknown",
+      "generator_weights_revision": "unknown"
+    },
+    "planned_overrides": {
+      "jaw_target": "Visible anatomical opening in attack actions, checked at game LOD1",
+      "method": "Inspect Bone02 and test local mesh/weight repair before considering full regeneration"
+    }
+  },
+  "inputs": ["catalog/assets/monster/monster03/versions/v0001.json", "docs/dragao-lorencia-plano.md", "examples/monster03.yaml"],
+  "steps": ["Defined stable asset identity and a new draft version linked to v0001.", "Selected proposed monster recipe and separated inherited parameters from planned jaw changes.", "Specified first geometry/rig hypothesis and review gates without claiming a completed model."],
+  "outputs": ["catalog/assets/monster/monster03/versions/v0002.json", "recipes/monster-hd-v1.json", "docs/architecture.md"],
+  "observations": ["v0002 is a draft; no geometry, shader or game-client change has been produced yet."],
+  "checks": [{"name": "registry integrity", "result": "pass", "evidence": "py -3.9 tools/registry.py validate"}, {"name": "jaw animation and LOD1 review", "result": "manual", "evidence": "Pending next geometry run"}],
+  "lessons": ["knowledge/lessons/dragon-jaw-bone02.json"]
+}

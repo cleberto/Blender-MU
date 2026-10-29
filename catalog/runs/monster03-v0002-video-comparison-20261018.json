@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-video-comparison-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "reference",
+  "status": "completed",
+  "started_at": "2026-10-18T21:20:00-03:00",
+  "finished_at": "2026-10-18T21:33:32-03:00",
+  "goal": "Make a video comparing our v0002 study with the received HD dragon after inspecting the user's BMD-vs-HD example video",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "python": "3.9", "encoder": "local MJPEG AVI writer"},
+  "inputs": [
+    "models/budge-dragon-old-vs-new.mp4",
+    "models/budge-dragon-hd.glb",
+    "work/monster03/budge-dragon-baseline-v2.blend",
+    "work/monster03/v0002-jaw-rotation-floor-test.blend"
+  ],
+  "parameters": {
+    "render_script": "tools/render_turntable.py",
+    "composition_script": "tools/build_monster03_comparison_video.py",
+    "encoder_script": "tools/encode_monster03_comparison_video.py",
+    "reference_inspection_script": "tools/inspect_reference_video.py",
+    "render_engine": "BLENDER_EEVEE",
+    "same_camera_and_lighting": true,
+    "action": "action00",
+    "action_frame": 0,
+    "angles": 48,
+    "angle_step_degrees": 7.5,
+    "head_ortho_scale": 90,
+    "frame_size": [1280, 720],
+    "fps": 24,
+    "frame_count": 288,
+    "duration_seconds": 12,
+    "video_codec": "MJPEG",
+    "container": "AVI",
+    "intro_frames": 24,
+    "rotation_loops": 2,
+    "per_angle_frames": 2,
+    "outro_frames": 72,
+    "video_sha256": "340BDD6B4D1EBC08C3A944060330EB05454D9CB913C540BCACCE6B13E6D7152C",
+    "video_bytes": 27063368,
+    "decoded_in_blender": true,
+    "decoded_frames": 288,
+    "sampled_frames": [1, 30, 73, 145, 216, 259],
+    "sample_directory": "work/monster03/comparison-video/validation"
+  },
+  "outputs": [
+    "work/monster03/comparison-video/budge-dragon-meu-vs-dele.avi",
+    "work/monster03/comparison-video/budge-dragon-meu-vs-dele-preview.webp",
+    "work/monster03/comparison-video/compare-00.png",
+    "work/monster03/video-renders/ours/head/render-report.json",
+    "work/monster03/video-renders/legacy/head/render-report.json"
+  ],
+  "steps": ["Inspect the supplied BMD-vs-HD video", "Render 48 matching head angles for both models", "Compose labeled frames and encode MJPEG AVI", "Decode six sample frames in Blender"],
+  "observations": [
+    "The supplied example video compares the original BMD with the received HD dragon over a 300-frame rotation.",
+    "Our v0002 is an isolated head movement study; it is not a complete textured dragon.",
+    "The received HD has substantially better skull, snout, eyes, horns, scales, wings and neck, but its mouth is closed in the received geometry.",
+    "The isolated v0002 jaw is visibly separate in rest pose; its motion quality has not been approved.",
+    "Blender 5.2.2 on this host decodes movies but offers no FFMPEG output format, and no external ffmpeg executable is installed. The reproducible output is MJPEG AVI."
+  ],
+  "checks": [
+    {"name": "video_decode", "result": "pass", "evidence": "work/monster03/comparison-video/validation/reference-0.50.png"},
+    {"name": "complete_ours_dragon", "result": "fail", "evidence": "work/monster03/comparison-video/budge-dragon-meu-vs-dele-preview.webp"}
+  ]
+}

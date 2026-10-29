@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster14",
+  "version": "v0001",
+  "status": "reference",
+  "created_at": "2026-10-18T20:20:00-03:00",
+  "parent_version": null,
+  "goal": "Catalog supplied Elite Yeti GLB without claiming local reproduction or approval.",
+  "recipe": null,
+  "recipe_sha256": null,
+  "parameters": {"source_manifest": "examples/monster14.yaml", "source_manifest_sha256": "5b4db495a6abb82337a7aedf16cfe5abdd1d705c9e50fcbca5401ddd2694ea3f", "exact_generation_environment": "unknown"},
+  "dependencies": [],
+  "artifacts": [{"role": "reference_glb", "path": "models/elite-yeti-hd.glb", "sha256": "8db77228123289715ab0fd64726e386b16ee4efac2fb85898222304ed539326f"}],
+  "runs": [],
+  "issues": ["Original BMD and textures are not present in this project.", "Supplied generation tool and environment are not included."],
+  "quality": {"required": [], "results": []},
+  "review": {"decision": "pending", "by": null, "at": null, "evidence": ["demo/yeti-hd-demo.png"], "notes": "Reference only."}
+}

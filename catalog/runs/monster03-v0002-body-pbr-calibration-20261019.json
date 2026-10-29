@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-body-pbr-calibration-20261019",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "surface",
+  "status": "completed",
+  "started_at": "2026-10-19T00:50:00-03:00",
+  "finished_at": "2026-10-19T01:05:00-03:00",
+  "goal": "Calibrate a conservative PBR response for the inherited HD body without changing structure or animation.",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "renderer": "BLENDER_EEVEE", "python": "3.9"},
+  "parameters": {
+    "study_id": "M03_BODY_PBR_01",
+    "LOD0": {"roughness": 0.62, "specular_ior_level": 0.32, "normal_strength": 1.1},
+    "LOD1": {"roughness": 0.65, "specular_ior_level": 0.3, "normal_strength": 1.05},
+    "LOD2": {"roughness": 0.69, "specular_ior_level": 0.28, "normal_strength": 1.0},
+    "base_color_link": "preserved",
+    "normal_map_link": "preserved",
+    "turntable": {"angles": 8, "degrees_between_angles": 45, "camera": "orthographic", "action": "action00", "frame": 0}
+  },
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "tools/build_body_material_calibration.py", "tools/render_turntable.py"],
+  "steps": ["Inventory packed materials and texture links", "Clone each inherited LOD material", "Set conservative roughness, specular IOR level and normal strength scalar values", "Render matched eight-angle baseline and candidate turntables", "Fingerprint and compare source versus candidate"],
+  "outputs": ["work/monster03/v0002-body-material-calibration.blend", "work/monster03/v0002-body-material-calibration.material-parameters.json", "work/monster03/hd-material-inventory.json", "work/monster03/body-probe/body-pbr-comparison.png", "work/monster03/body-material-preservation.json"],
+  "observations": ["The received HD LOD materials use packed base-color and normal textures, but their roughness scalar was 1.0.", "The calibrated material retains the original color/normal texture links and provides more controlled normal-map response under the matched neutral turntable.", "All LOD geometry, UVs, weights, seven action signatures and packed image bytes are identical to the baseline; only copied material identities and scalar shader controls differ.", "This is a conservative visual study, not final material approval and not a solution for the unresolved mouth topology."],
+  "checks": [
+    {"name": "structure and animation preservation", "result": "pass", "evidence": "work/monster03/body-material-preservation.json"},
+    {"name": "matched 360 material comparison", "result": "manual", "evidence": "work/monster03/body-probe/body-pbr-comparison.png"},
+    {"name": "target runtime material parity", "result": "unknown", "evidence": "Unity validation is deferred"},
+    {"name": "mouth topology and interior", "result": "fail", "evidence": "catalog/runs/monster03-v0002-mouth-topology-studies-20261018.json"}
+  ],
+  "lessons": ["knowledge/lessons/shader-only-preservation.json"]
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "dragon-head-neck-graft",
+  "status": "verified",
+  "applies_to": ["mu:monster:monster03"],
+  "finding": "A separate Bone02 jaw opens in selected poses, but intermediate frames can cross the upper muzzle. Deleting front-head faces from inherited LOD0 by a spatial box leaves jagged neck edges and disconnected or exposed horn roots in actions 0/3.",
+  "guidance": "Do not use box-based face deletion as a production graft or flat weighted cheek bands as an anatomical hinge. Plan compatible upper-skull/neck boundary loops, a volumetric cheek/temporal region, and horn roots attached to the rebuilt skull. Grade weights through Bip01 Neck, Neck1, Neck2 and Head. Sweep every frame of all seven actions before surface detail or LOD. Clamping negative Bone02 X rotation is only a partial fix: extreme action01 poses still expose the jaw separation. Head study 01 is a rig/anatomy scaffold, not a final mesh.",
+  "evidence": ["catalog/runs/monster03-v0002-head-study01-20261018.json", "catalog/runs/monster03-v0002-head-graft-studies-20261018.json", "catalog/runs/monster03-v0002-action-sweep-20261018.json", "catalog/runs/monster03-v0002-jaw-rotation-floor-20261018.json", "catalog/runs/monster03-v0002-cheek-hinge-study-20261018.json", "work/monster03/head-study-01-action-sweep.json", "work/monster03/diagnostic-renders/head-study-01/action03-frame02-side.png", "work/monster03/diagnostic-renders/head-study-02/action03-frame00-side.png", "docs/monster03-v0002-experiments.md"],
+  "superseded_by": null
+}

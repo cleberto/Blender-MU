@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "addon-blender-52-textures",
+  "status": "verified",
+  "applies_to": [],
+  "finding": "On this Windows host, io_scene_muonline 0.1.0 registers and imports BMD geometry, armature and actions in Blender 5.2.2, but texture import raises NameError because Pillow is unavailable in Blender's embedded Python. The addon also reports a rest/bind mismatch for 29 of the Dragon's 39 bones.",
+  "guidance": "Disable texture loading for structural audits. Before production use, modernize texture decoding/dependencies and compare animated poses against the game; do not assume an import that returns meshes is fully correct.",
+  "evidence": ["catalog/runs/monster03-v0001-audit-20261018.json", "tools/blender_smoke.py"],
+  "superseded_by": null
+}

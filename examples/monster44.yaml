@@ -1,0 +1,123 @@
+# Bloody Wolf: DRAFT (2026-10-14, from Monster44.bmd and the client sources; no stage run yet). The operator's
+# second-monster pick. A quadruped (four legs on a Biped rig: arms = forelegs) with two alpha card meshes: the mane
+# (bulldughair.tga) and the claws (BGcl.tga). The roles in `meshes` follow slot 2's client findings (HANDOFF.md
+# (b)); no stage builds cards yet. No client work is needed. Read HANDOFF.md first.
+kind: monster
+asset: monster44
+label: Bloody Wolf
+bmd: Monster/Monster44.bmd
+texture_dirs: [Monster]
+pose: [0, 0]            # DRAFT: action 0 key 0 (idle, 6 keys); a standing quadruped keeps its legs apart
+budget: 12000
+client:
+  model: MODEL_BLOODY_WOLF
+  index: 43             # MONSTER_MODEL_BLOODY_WOLF (_enum.h); server monster 60, Tarkan (and Crywolf)
+  scale: 2.2            # CreateMonster MONSTER_BLOODY_WOLF Object.Scale
+  play_speed: [0.25, 0.2, 0.34, 0.33, 0.33, 0.5, 0.55]   # OpenMonsterModel defaults (no override)
+  hold_last_actions: [6]
+# actions (keys): 0 idle 6, 1 idle2 6, 2 walk 7 (LockPositions), 3 attack1 7, 4 attack2 7, 5 shock 7, 6 die 9.
+# Client extras (keep the MU bone indices): MoveEye(bones 11, 12) + BITMAP_JOINT_ENERGY subtypes 2/3 = the blue EYE
+# trails, created with the wolf and moved to bones 11/12 every tick in every pose (ZzzCharacter.cpp:13509, 5721; slot 2
+# 2026-10-15: not an attack glow, the blades have none), sand smoke; in Crywolf a second RENDER_CHROME | RENDER_BRIGHT pass over every mesh with
+# BodyLight (0.6, 0.8, 0.6) (GMCrywolf1st.cpp).
+
+meshes:                  # roles per slot 2's client findings (HANDOFF.md (b)): no per-monster material rules; every
+                         # RGBA texture = alpha test 0.25, double-sided, normal lighting
+  - {index: 0, texture: bulldug.jpg, role: body}                       # 594 tris, 256²: body, head, legs, AND the
+                                                                       # four long orange blades beside the head and
+                                                                       # the golden ribs (thin spikes Omni must make)
+  # Operator 2026-10-15: no legacy cards. Omni already builds the straps and the mane fur into the body (the cards
+  # floated off the reimagined body); they are generated parts, skinned from these meshes' bones. The card
+  # version is lineage omni-reimagined (root monsters/run); this one is omni-reimagined-gp.
+  - {index: 1, texture: BGcl.tga, role: body, name: straps, generated: true}   # 180 tris, 128x32: the grey BANDAGE
+                                                                       # STRAPS round legs, body and muzzle (NO glow in
+                                                                       # code; BITMAP_JOINT_ENERGY on bones 11/12 = eye trails)
+  - {index: 2, texture: bulldughair.tga, role: body, name: mane, generated: true}   # 84 tris, 32²: the mane tufts
+                                                                       # (Spine2 + Head)
+
+bones:
+  head: ["Bip01 Head", "Box01", "Box02", "Bone01", "Bone06", "eye", "eye01"]   # BoneHead 7; eye/eye01 = MoveEye
+  neck: ["Bip01 Neck"]
+  jaw: ["Box01", "Box02"]    # DRAFT: the chain under the head; check the attack actions
+  hands: ["Bip01 L Hand", "Bip01 R Hand", "Bip01 L Finger0", "Bip01 R Finger0"]   # front paws
+  feet: ["Bip01 L Foot", "Bip01 R Foot", "Bip01 L Toe0", "Bip01 R Toe0"]          # hind paws
+  sockets: ["Bip01 Head", "eye", "eye01"]
+  limb_roots: ["Bip01 L Thigh", "Bip01 R Thigh", "Bip01 L Clavicle", "Bip01 R Clavicle"]
+  rigid: []
+  tail: ["Bone02", "Bone03", "Bone04", "Bone05"]   # DRAFT: four bones under Spine2 (tail or back spikes; check)
+  spikes: {bones: [], min_z: null}
+  smooth_exclude: ["Bip01 L Hand", "Bip01 R Hand", "Bip01 L Finger0", "Bip01 R Finger0",
+                   "Bip01 L Foot", "Bip01 R Foot", "Bip01 L Toe0", "Bip01 R Toe0"]
+  seam: ["Bip01 R Forearm", "Bip01 R UpperArm"]
+
+concept:
+  subject: "the Bloody Wolf, a huge armoured war wolf standing on four legs"
+  detail: "coarse dark brown fur, a shaggy grey-brown mane over the neck and shoulders, worn grey bandage straps wrapped around the legs and body, glowing golden ribs on the flanks, long glowing orange blades jutting forward beside the head, a wide head with glowing eyes, bared fangs and a snarling muzzle, strong legs with heavy paws"
+  refine_prompt: null
+
+picks: {concept: qwen-reimagined-s11, omni_seed: 1, head_candidate: null}   # operator 2026-10-15: concept C; shape =
+  # TRELLIS.2 on the LEFT view, seed 1 ("clear winner: keeps the original's unique elements, 4 long spikes, familiar
+  # middle chest"; IoU vs the concept 0.737, spike 3's root monsters/wolf-shape/review). omni_seed is the shape
+  # seed of the shape source below. Earlier lineages: monsters/run (Omni s2 + cards), wolf-s1/wolf-s3 (heads).
+
+shape:                   # stage 4 source (shapesource.py): the front view pointed the 4 blades at the camera
+  generator: trellis2
+  view: left
+  trim_ground: 0.04      # the generated ground slab under the hind feet (cut in the level set, away from the feet)
+  repair: {voxel: 0.4, close: 2.5, foot_radius: 0.03}   # raw TRELLIS.2: 4183 non-manifold edges, genus ~3000;
+                         # close 0.6 left the rib cage hollow (31 % of the area seen from no direction, colour FAIL);
+                         # 2.5: solid torso, ribs and straps as relief, genus 1, 99.9 % visible, blades and spikes kept
+
+names:
+  prefix: t2left-reimagined    # TRELLIS.2 left-view shape, generated mane/straps (older: omni-reimagined[-gp])
+
+budgets:
+  lod_triangles: [16000, 5000, 2000]   # operator 2026-10-15: LOD0 16000 (the Wolf is LOD0 at the default camera)
+  lod_max_genus: 60      # the repaired TRELLIS.2 Wolf keeps ~44 real handles (blade and strap gaps)
+  head_share: 0.19
+  head_share_min: 0.17
+  density: {head: 3.5, hands: 1.6, spikes: 1.0, body: 1.0}   # head 2.0 gave 6.1 texels/MU (G4 >= 8): the Wolf's
+                                                            # 2048 atlas also carries 4 blades and the mane
+
+head:
+  enabled: false         # operator 2026-10-15: "get the model good before focusing on head"
+
+depth:
+  tile_mu_per_px: 0.12   # DRAFT: the wolf is ~120 MU long x2.2 in game; recompute from the concept framing
+
+face:
+  enabled: false         # DRAFT: a muzzle with eyes and fangs reads at x2.2; enable after the concept and the head
+  landmarks: {}
+  passes: []             # likely: carve-ellipsoid mouth + add-round-cone fangs (no move-part, no crystal plates)
+
+look:
+  name: lookW3           # operator 2026-10-15: the look must not darken the Wolf (slot 2: old HD Wolf in game p50 0.196 vs
+                         # BMD 0.263). Studio render at the game camera, p50 luma: BMD 0.401; depth 0.348; lookC2 0.280
+                         # (darker); W1 0.322, W2 0.356, W3 0.391 (wolf-t2/brightness.json, review/monster44-t2-looks.png)
+  params: {form: 0.25, ao_power: 1.25, darken: 1.3, lift: 0.0, bleed: true}
+
+lighting: null
+
+stages:
+  shape: {seeds: [1]}
+  smooth: {skip: true, note: "operator 2026-10-15: smoothing off (the Yeti presets melt the straps, muzzle and mane spikes)"}
+  ingame: {verdict: "operator 2026-10-15: accepted (root monsters/wolf-t2, t2left-reimagined-lookW3-hd, 1024 copy sha256 dcea4b1e); slot 2 captures in spike 3's root, ingame/captures/monster44-t2 (client 1911c693, Chaos Castle 1 + Crywolf): drawn from the GLB, masked luma p50 within +-0.008 of the BMD in every pose/camera, 4 blades intact at LOD0/1/2 from every side and following the head in both attacks, default camera LOD0, animtrace diff 0; minor: eye trail (bones 11/12) sits on the brow above the modelled eyes, straps paler than the BMD, faint yellow in the mouth, texture softer than the concept. FINAL variant t2left-reimagined-lookW3-eyes2-hd (operator: move the glow near the eyes if easy): unweighted eye joints 11/12 moved onto the amber eyes, 2.5 MU out along the eye normal (tools/hdmodel glb-move-joints; eyes1 at the eye centres hid the depth-tested trail inside the head); mesh byte-identical; 1024 copy sha256 d2e791be; slot 2 captures monster44-t2-eyes2: both sparks on the eyes in idle/walk, one in attacks as the BMD, only bones 11/12 and their trail differ"}
+
+colour:
+  register_views: true   # the concept cells are 1.2-1.6x larger than the refit TRELLIS.2 shape (each refined on its
+                         # own): unregistered, the projection covered 40 % and the colour gates failed (2026-10-15)
+  depth_filter: false    # not validated (wolf-shape/review/d-phantom-filter-wolf-t2: rejects 43-75 %)
+  part_masks:            # phantom paint (operator 2026-10-15, option a): the concept's gold blades stand in front of
+                         # the chest and face; their pixels only colour the model's blades (Paint's gold texels)
+    - {name: blades, hue: [28, 58], sat_min: 0.5, val_min: 0.55, overlap: 0.1, grow_mu: 0.5}   # 1.5: part 16 %
+                         # of the texels (the mouth with it: Paint painted gold teeth); 0.5 + view confirmation
+
+gates:
+  decisions:             # the operator's shape pick against the BMD gates (the reimagined silhouette differs by design)
+    shape/dense-silhouette-iou: "operator 2026-10-15 picked trellis2side-s1 (reimagined concept C); IoU vs the concept 0.737"
+    shape/dense-chamfer: "operator 2026-10-15 picked trellis2side-s1; Chamfer is measured against the BMD"
+    colour/evidence-coverage: "operator 2026-10-15 after the part masks (option a): \"2 then in-game\""
+    colour/concept-dominant: "operator 2026-10-15 after the part masks (option a): \"2 then in-game\""
+    colour/gap-ssim: "operator 2026-10-15 after the part masks (option a): \"2 then in-game\""
+    colour/gap-detail: "operator 2026-10-15 after the part masks (option a): \"2 then in-game\""
+    colour/gap-blotch-game: "operator 2026-10-15 after the part masks (option a): \"2 then in-game\""

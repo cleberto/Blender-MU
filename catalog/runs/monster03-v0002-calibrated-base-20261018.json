@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-calibrated-base-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T21:21:00-03:00",
+  "finished_at": "2026-10-18T21:24:00-03:00",
+  "goal": "Create a production visual starting scene that retains the inherited HD dragon exactly while marking the mouth retopology work zone",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "render_engine": "BLENDER_EEVEE", "python": "3.9"},
+  "parameters": {"script": "tools/prepare_calibrated_base.py", "mouth_guide_world_bounds": {"y_less_than": -35, "abs_x_less_than": 22, "z_between": [102, 141]}, "selected_vertices": 544, "strong_vertices": 154, "selection_role": "guide_only_not_topology_selection"},
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "models/budge-dragon-hd.glb", "work/monster03/turntable/comparison-report.json"],
+  "steps": ["Added a weighted mouth-retopology guide group to the inherited LOD0 mesh without cutting or moving geometry.", "Asserted that source and output vertex positions, faces and material names hash identically.", "Rendered the calibrated scene at the matched camera and compared every pixel against the reference frame."],
+  "outputs": ["work/monster03/v0002-calibrated-visual-base.blend", "work/monster03/calibrated-visual-base-report.json", "work/monster03/turntable/calibrated/head/frame-00.png", "work/monster03/turntable/calibrated-match-report.json"],
+  "observations": ["The calibrated scene preserves the entire HD dragon visual as received; only a guide vertex group and metadata were added.", "The guide is broad by design and must not be used directly as a destructive face-selection/cut mask.", "The matched reference and calibrated renders are pixel-identical at action00 frame0."],
+  "checks": [
+    {"name": "LOD0 geometry and materials unchanged", "result": "pass", "evidence": "work/monster03/calibrated-visual-base-report.json"},
+    {"name": "matched reference render pixel-identical", "result": "pass", "evidence": "work/monster03/turntable/calibrated-match-report.json"},
+    {"name": "new functional jaw production geometry", "result": "fail", "evidence": "work/monster03/calibrated-visual-base-report.json"}
+  ]
+}

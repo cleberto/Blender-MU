@@ -1,0 +1,15 @@
+{
+  "id": "world-prop-v1",
+  "revision": 1,
+  "status": "proposed",
+  "scope": ["world_prop", "map", "effect"],
+  "stages": [
+    {"id": "source", "output": "Original asset, placement, textures, hashes", "gate": "Identity and map context verified"},
+    {"id": "reference", "output": "Matched views in scene and neutral light", "gate": "Scale and silhouette documented"},
+    {"id": "geometry", "output": "Editable mesh and collision candidate", "gate": "Topology, contact and collision behavior reviewed"},
+    {"id": "surface", "output": "UV, material and light response", "gate": "No obvious tiling, seams or baked lighting errors"},
+    {"id": "export", "output": "LOD and client-ready asset", "gate": "Bounds, pivot, instances and performance pass"},
+    {"id": "ingame", "output": "Scene comparison in relevant map", "gate": "Human review from player camera"}
+  ],
+  "defaults": {"collision_required": "decide per asset", "lod_count": "decide per usage"}
+}

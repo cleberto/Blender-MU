@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "status": "draft",
+  "created_at": "2026-10-18T23:21:33+00:00",
+  "parent_version": "v0001",
+  "goal": "Preserve the inherited HD dragon visual while rebuilding a functional mouth and volumetric jaw hinge on the existing skeleton",
+  "recipe": "recipes/monster-hd-v1.json",
+  "recipe_sha256": "04036F2880BCC41203545AD952021C27F85237805A5013AB4E370924C5DB4770",
+  "parameters": {
+    "inherited_from": "v0001",
+    "baseline": {
+      "source_manifest": "examples/monster03.yaml",
+      "source_manifest_sha256": "43bfc0366197e3c004d25648cc15294ef0ed716f55db55d32c9734a300fbd8b8",
+      "concept_pick": "qwen-faithful-s22",
+      "omni_seed": 1,
+      "head_pass": false,
+      "face_pass": false,
+      "jaw_bones_declared": [],
+      "look": "lookC2",
+      "lod_triangles": [
+        6002,
+        2002,
+        802
+      ],
+      "client_scale": 0.5,
+      "blender_generation_version": "unknown",
+      "generator_weights_revision": "unknown"
+    },
+    "planned_overrides": {
+      "jaw_target": "Visible anatomical opening in attack actions, checked at game LOD1",
+      "method": "Preserve inherited HD body, cranium, horns, eyes, neck and palette; locally retopologize mouth/jaw hinge, transfer appearance and verify all seven actions",
+      "art_direction_selected_by_user": "Balance original MU identity with realistic anatomy and materials; work/monster03/concepts/budge-head-realism-study01.png is guidance, not approved geometry"
+    }
+  },
+  "dependencies": [],
+  "artifacts": [],
+  "runs": [
+    "monster03-v0002-planning-20261018t232225z",
+    "monster03-v0002-baseline-20261018",
+    "monster03-v0002-jaw-experiments-20261018",
+    "monster03-v0002-unity-probe-20261018",
+    "monster03-v0002-baseline-fix-20261018",
+    "monster03-v0002-export-probe-20261018",
+    "monster03-v0002-head-study01-20261018",
+    "monster03-v0002-head-graft-studies-20261018",
+    "monster03-v0002-concept-study-20261018",
+    "monster03-v0002-action-sweep-20261018",
+    "monster03-v0002-jaw-rotation-floor-20261018",
+    "monster03-v0002-cheek-hinge-study-20261018",
+    "monster03-v0002-360-calibration-20261018",
+    "monster03-v0002-calibrated-base-20261018",
+    "monster03-v0002-video-comparison-20261018",
+    "monster03-v0002-engine-20261019t004320z",
+    "monster03-v0002-engine-20261019t004445z",
+    "monster03-v0002-hd-island-calibration-20261018",
+    "monster03-v0002-engine-20261019t004613z",
+    "monster03-v0002-mouth-topology-studies-20261018",
+    "monster03-v0002-body-preservation-20261018",
+    "monster03-v0002-body-pbr-calibration-20261019",
+    "monster03-v0002-body-pbr-profile-replay-20261019"
+  ],
+  "issues": [
+    "Awaiting matched BMD/GLB/Unity prefab attack-frame inspection and final effective parameters.",
+    "Unity/OpenMU import contract, rest/bind behavior and material parity are unverified; see docs/dragon-v2-readiness.md.",
+    "Four local jaw-split experiments rejected; head topology must be rebuilt. See docs/monster03-v0002-experiments.md.",
+    "Unity validation is deferred at the user's request; Blender-only gates proceed. The installed Unity Editor currently reports no valid license.",
+    "Head study 01 proves separate Bone02 motion but is a graybox and fails full-action collision checks at intermediate frames; no body/neck graft, production anatomy, UV, LOD or surface detail.",
+    "Two graft probes are rejected: deleting source head faces leaves open jagged neck topology and detached/exposed horn roots.",
+    "Clamping negative Bone02 X rotation fixes sampled muzzle crossing but fails action01 pose alignment; keep only as a partial animation experiment.",
+    "Simple weighted cheek bands failed as visible flaps. The hinge needs volumetric retopology, not a membrane strip.",
+    "Calibrated visual base preserves inherited LOD0 exactly and marks only a mouth work guide; final jaw geometry remains to be built.",
+    "M03_BODY_PBR_01 is a preserved shader-only calibration study. It requires a human material review and target-runtime check; it does not resolve the mouth issue."
+  ],
+  "quality": {
+    "required": [
+      "source",
+      "reference",
+      "concept",
+      "geometry",
+      "rig",
+      "surface",
+      "lod",
+      "export",
+      "ingame"
+    ],
+    "results": []
+  },
+  "review": {
+    "decision": "pending",
+    "by": null,
+    "at": null,
+    "evidence": [],
+    "notes": ""
+  }
+}

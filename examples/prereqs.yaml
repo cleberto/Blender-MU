@@ -1,0 +1,191 @@
+# Host prerequisites of the HD model pipeline: what `tools/hdmodel doctor` checks and what
+# docs/hd-model-reproduce.md installs. One list, read by both (the guide links here instead of copying it).
+#
+# Weights: `root` names the folder the path is relative to:
+#   comfy  = $HDMODEL_COMFY_ROOT/models   (default ~/ai/ComfyUI/models)
+#   omni   = $HUNYUAN_OMNI_ROOT/models    (default ~/ai/hunyuan3d-omni/models)
+#   paint  = $HY3DPAINT_ROOT/models       (default ~/ai/hy3dpaint/models)
+# `size` is in bytes (the fast check), `sha256` the file's digest (`doctor --full`). `url` is the download
+# (Hugging Face `resolve/<revision>/<path>`, so the revision is part of it). For the HF files the sha256 equals the
+# hub's LFS sha256 at that revision; the files that were on the host before the spike (Qwen-Image 2.1, FLUX.2
+# Klein, SeedVR2, UltraSharpV2) were matched on 2026-10-16 against the then-current revision named here; the
+# Klein repo is gated, so its sha256 is the local file's. `required: false` = only for an optional or dead-end
+# path (`used_by` says which); doctor reports those as warnings, not failures.
+
+versions:
+  python_system_min: [3, 12]     # the tool itself (pilot: 3.14.7)
+  python_venv: "3.12"            # Omni and Paint venvs (uv-managed CPython 3.12.14)
+  blender: "5.2.1"
+  comfyui: "0.38.0"              # https://github.com/Comfy-Org/ComfyUI @ 8cfe5e1ecb97512dea8deaac15e1228d7e6feeb1; every node is core
+  torch: "2.14.1+cu130"
+  gpu_vram_total_mib_min: 24576  # Paint 2.1 with 15 views at 512 px peaks at 22.5 GB; its gpu-run.sh waits for 24000 MiB free
+  disk_free_gib_min: 10          # concept root: fail below
+  disk_free_gib_warn: 30         # concept root: warn below (a monster writes 1-2 GB; the pilot root is 20 GB)
+  ram_available_gib_min: 8       # the gpu-run.sh wrappers wait for 8 GB available
+
+# The document to follow for a missing prerequisite, per doctor area (`doctor` prints it next to every FAIL/WARN).
+# The generator installs' own INSTALL.md files live outside the repository (byte copies of their runners:
+# tools/hdmodellib/host/); the reproduction guide copies their essentials.
+docs:
+  host: "docs/hd-model-reproduce.md §1.2 System packages"
+  gpu: "docs/hd-model-reproduce.md §1.1 Hardware and OS, §2.5 Resource rules (GPU lock)"
+  comfyui: "docs/hd-model-reproduce.md §1.4 ComfyUI and §1.6 ComfyUI's network namespace"
+  weights: "docs/hd-model-reproduce.md §1.5 Weights (download commands; URL and sha256 in prereqs.yaml)"
+  omni: "~/ai/hunyuan3d-omni/INSTALL.md; docs/hd-model-reproduce.md §1.7 Generator installs"
+  paint: "~/ai/hy3dpaint/INSTALL.md; docs/hd-model-reproduce.md §1.7 Generator installs"
+  repo: "docs/hd-model-reproduce.md §2 Repository side"
+
+system_python_modules: [numpy, PIL, yaml, openvdb]
+binaries: [ffmpeg, nvidia-smi, flock, curl, git]
+
+installs:
+  omni:
+    label: Hunyuan3D-Omni
+    env: HUNYUAN_OMNI_ROOT
+    default: ~/ai/hunyuan3d-omni
+    files: [.venv/bin/python, run_omni.py, gpu-run.sh]
+    lock_env: OMNI_GPU_LOCK      # gpu-run.sh's lock file; tools/hdmodel passes its own (config.gpu_lock_path)
+    upstream: {url: "https://github.com/Tencent-Hunyuan/Hunyuan3D-Omni", commit: 4d47c0cc2bd0c4281963a7314ab330a5af36bfa8}
+    used_by: "stage 4 (Omni shape) and stage 7 (head candidates)"
+  paint:
+    label: Hunyuan3D-Paint 2.1
+    env: HY3DPAINT_ROOT
+    default: ~/ai/hy3dpaint
+    files: [.venv/bin/python, paint.py, gpu-run.sh]
+    lock_env: HY3DPAINT_GPU_LOCK
+    upstream: {url: "https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1", commit: 82920d643c0dc2f7bfd7255f45f62d386edfe60c}
+    imports: [custom_rasterizer, xatlas]
+    built: ["upstream/hy3dpaint/DifferentiableRenderer/mesh_inpaint_processor*.so"]
+    used_by: "stage 6 (Paint 2.1) and every UV atlas (xatlas, HDMODEL_XATLAS_PYTHON)"
+
+# Pilot files that every monster's look stage reads from the repository (byte copies of the spike's, 2026-10-16).
+pilot_files:
+  - {path: tools/hdmodellib/pilot/calibration.json,
+     used_by: "look stage: the preview calibration (client lighting)"}
+  - {path: tools/hdmodellib/pilot/glb_max_texture.py,
+     used_by: "look stage: the in-game copy"}
+
+comfy_nodes:
+  required:   # every class_type of tools/hdmodellib/workflows/{qwen,klein,seedvr2,upscale_model,qwen_ref,marigold_normals}.json + the TRELLIS.2 graph (shapes.py)
+    [BasicGuider, CFGGuider, CLIPLoader, CLIPTextEncode, CLIPVisionLoader, ConditioningLoader, ConditioningZeroOut,
+     DisableNoise, EmptyFlux2LatentImage, EmptyTrellis2LatentStructure, Flux2Scheduler, FluxKVCache,
+     ImageUpscaleWithModel, KSampler, KSamplerSelect, LoadImage, LoraLoaderModelOnly, ManualSigmas,
+     MarigoldV2PostProcess, ModelSamplingAuraFlow, ModelSamplingSD3, QwenImage21Cache, RandomNoise, ReferenceLatent,
+     RescaleCFG, CFGOverride, ResizeImageMaskNode, SamplerCustomAdvanced, SaveImage, SaveGLB, SeedVR2Conditioning,
+     SeedVR2PostProcessing, SeedVR2Preprocess, TextEncodeQwenImage21, Trellis2Conditioning, Trellis2ShapeStage,
+     Trellis2TextureStage, Trellis2UpsampleStage, UNETLoader, UpscaleModelLoader, VAEDecode, VAEDecodeTiled,
+     VAEEncode, VAEEncodeTiled, VAELoader, VaeDecodeShapeTrellis, VaeDecodeStructureTrellis2,
+     VaeDecodeTextureTrellis, RemeshMesh, DecimateMesh, UnwrapMesh, BakeTextureFromVoxel, ApplyTextureToMesh]
+  optional:   # depth filter (depth-moge, off by default) and the Pixal3D dead end
+    [LoadMoGeModel, MoGeInference, MoGeRender, Pixal3DMultiViewConditioning]
+
+weights:
+  # --- ComfyUI: stage 2 concept (Qwen-Image 2.1 edit) and stage 3 refine (Qwen candidates)
+  - {root: comfy, path: diffusion_models/qwen_image_2.1_bf16.safetensors, size: 14230280616,
+     sha256: 89f4158d066cc33906a199fca85634f766892dd78f49b6698dabf187ac86c4bc, required: true, used_by: "concept, refine",
+     url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/diffusion_models/qwen_image_2.1_bf16.safetensors"}
+  - {root: comfy, path: text_encoders/qwen3vl_8b_int8_convrot.safetensors, size: 9350798360,
+     sha256: 8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f, required: true, used_by: "concept, refine",
+     url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/text_encoders/qwen3vl_8b_int8_convrot.safetensors"}
+  - {root: comfy, path: vae/qwen_image_2.1_vae_bf16.safetensors, size: 675509688,
+     sha256: bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9, required: true, used_by: "concept, refine",
+     url: "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors"}
+  # --- ComfyUI: stage 2 concept, FLUX.2 Klein candidates (the default `concept` runs both models)
+  - {root: comfy, path: diffusion_models/flux-2-klein-9b-kv.safetensors, size: 18157185168,
+     sha256: cbf07a8a1fbf5fff303adafd1fc4a135249319a15c6bb4bf3a4ba98a599dca59, required: true, used_by: "concept (Klein candidates; gated repo)",
+     url: "https://huggingface.co/black-forest-labs/FLUX.2-klein-9b-kv/resolve/a6dfb36eca3a3906eb2fd460795adfb844e5fcce/flux-2-klein-9b-kv.safetensors"}
+  - {root: comfy, path: text_encoders/qwen_3_8b_fp8mixed.safetensors, size: 8664848742,
+     sha256: abad16806e0cbabc54e0325d6565847443fe396d5f0be38bb3cd3fe75a1201d6, required: true, used_by: "concept (Klein)",
+     url: "https://huggingface.co/Comfy-Org/flux2-klein-9B/resolve/3f62d9d8ae1fec33c6e91453d5c712855b096b55/split_files/text_encoders/qwen_3_8b_fp8mixed.safetensors"}
+  - {root: comfy, path: vae/flux2-vae.safetensors, size: 336211292,
+     sha256: 868fe7b343cc8f3a19dbcfcafbc3d5f888802be3f89bd81b65b3621a066ce8f3, required: true, used_by: "concept (Klein)",
+     url: "https://huggingface.co/Comfy-Org/flux2-klein-9B/resolve/3f62d9d8ae1fec33c6e91453d5c712855b096b55/split_files/vae/flux2-vae.safetensors"}
+  # --- ComfyUI: stage 3 refine (SeedVR2 7B, 4x-UltraSharpV2)
+  - {root: comfy, path: diffusion_models/seedvr2_7b_fp16.safetensors, size: 16480583960,
+     sha256: 2742ca6fee63bc5cc1773f426dd4b07b78cad27f51c9ea5cd42b035e6b592252, required: true, used_by: refine,
+     url: "https://huggingface.co/Comfy-Org/SeedVR2/resolve/df48879708206a403d2a61acd55578c2e80fd233/diffusion_models/seedvr2_7b_fp16.safetensors"}
+  - {root: comfy, path: vae/seedvr2_ema_vae_fp16.safetensors, size: 501324814,
+     sha256: 20678548f420d98d26f11442d3528f8b8c94e57ee046ef93dbb7633da8612ca1, required: true, used_by: refine,
+     url: "https://huggingface.co/Comfy-Org/SeedVR2/resolve/df48879708206a403d2a61acd55578c2e80fd233/vae/seedvr2_ema_vae_fp16.safetensors"}
+  - {root: comfy, path: upscale_models/4x-UltraSharpV2.safetensors, size: 139792588,
+     sha256: 2b5db674aa8f3864a696dccd1d07d7cc0500fbf220f35044cd30eee9a7f971a7, required: true, used_by: refine,
+     url: "https://huggingface.co/Kim2091/UltraSharpV2/resolve/2d1db39ff692c111da92112d49f833e4ad7035ae/4x-UltraSharpV2.safetensors"}
+  # --- ComfyUI: stage 8 depth, Marigold v2 normals on Qwen-Image-Edit-2509 (~/ai/downloads-2026-10-13/comfy.sha)
+  - {root: comfy, path: diffusion_models/qwen_image_edit_2509_int8_convrot.safetensors, size: 20499083752,
+     sha256: 638402843782296122f42f2ff557a63a9535c4fbc3f6978308042c8d0f4012b4, required: true, used_by: depth-marigold,
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/diffusion_models/qwen_image_edit_2509_int8_convrot.safetensors"}
+  - {root: comfy, path: loras/marigold_v2_normals.safetensors, size: 1703764632,
+     sha256: 94a96e203f47797b23a21c6fe0bf169db178342698871f6a95d944537a680135, required: true, used_by: depth-marigold,
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/loras/marigold_v2_normals.safetensors"}
+  - {root: comfy, path: embeddings/marigold_v2_normals_conditioning.safetensors, size: 2537592,
+     sha256: a0f82526b471482dfb2c2403aa63582f7732241d706f1f5b0daeda88762eeb5f, required: true, used_by: depth-marigold,
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/embeddings/marigold_v2_normals_conditioning.safetensors"}
+  - {root: comfy, path: vae/marigold_v2_normals_vae.safetensors, size: 253806278,
+     sha256: 66db6213a47b53e8835df48c9977f06cd74c9a973c6f0ac4d65a725de03add71, required: true, used_by: depth-marigold,
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/vae/marigold_v2_normals_vae.safetensors"}
+  - {root: comfy, path: loras/marigold_v2_albedo.safetensors, size: 1703764632,
+     sha256: 263ec11bb29625c5ec7b145ea2fbc9e8e7854ad4a229031e020e55d614e8e919, required: false, used_by: "Marigold albedo (dead end)",
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/loras/marigold_v2_albedo.safetensors"}
+  - {root: comfy, path: embeddings/marigold_v2_albedo_conditioning.safetensors, size: 2573432,
+     sha256: f3d70cc7d4d37743e3f4da197b97a2d2847a8a172a50f86112642ecfa99834fd, required: false, used_by: "Marigold albedo (dead end)",
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/embeddings/marigold_v2_albedo_conditioning.safetensors"}
+  - {root: comfy, path: vae/marigold_v2_albedo_vae.safetensors, size: 253806278,
+     sha256: 91524d3ecafcbb25ceea3d7a76b09581eb27664fb1ba09996db3da2b1f91563f, required: false, used_by: "Marigold albedo (dead end)",
+     url: "https://huggingface.co/Comfy-Org/marigold-v2-0/resolve/c304e4370a1bc677a98c906c3683ace49a6bdadd/vae/marigold_v2_albedo_vae.safetensors"}
+  - {root: comfy, path: geometry_estimation/moge_3_vitg_fp16.safetensors, size: 2501605198,
+     sha256: a587e42936ae7080b419df4c047b0f0b075d3492418f76ce81fb0779925a1fe6, required: false, used_by: "depth-moge (colour.depth_filter, off by default)",
+     url: "https://huggingface.co/Comfy-Org/MoGe/resolve/1484985258ba7ef45c314144fcf0e90924ffbf44/geometry_estimation/moge_3_vitg_fp16.safetensors"}
+  # --- ComfyUI: stage 4 with shape.generator trellis2 (the Wolf); the download commands: docs/hd-model-reproduce.md
+  - {root: comfy, path: diffusion_models/trellis_2_bf16.safetensors, size: 10338297616,
+     sha256: bf8ebe29f2d73722ca8a17b7aa65ef07650eb26d04799ae600482058f96921b5, required: true, used_by: "shape-generate (trellis2)",
+     url: "https://huggingface.co/Comfy-Org/TRELLIS.2/resolve/430a9d09b2416687018c8fe8edced2ad4858a439/diffusion_models/trellis_2_bf16.safetensors"}
+  - {root: comfy, path: vae/trellis_2_shape_vae_bf16.safetensors, size: 1095844024,
+     sha256: de0cb4949a76c59ee5c091a995a69bcc8c51d5aeda939f0c641a50d2a72341f4, required: true, used_by: "shape-generate (trellis2)",
+     url: "https://huggingface.co/Comfy-Org/TRELLIS.2/resolve/430a9d09b2416687018c8fe8edced2ad4858a439/vae/trellis_2_shape_vae_bf16.safetensors"}
+  - {root: comfy, path: vae/trellis_2_texture_vae_bf16.safetensors, size: 948461364,
+     sha256: 714e5ebf094a610e12a8e3b5175c18a62f37f6ea4218acb6073644456b73ab0e, required: true, used_by: "shape-generate (trellis2)",
+     url: "https://huggingface.co/Comfy-Org/TRELLIS.2/resolve/430a9d09b2416687018c8fe8edced2ad4858a439/vae/trellis_2_texture_vae_bf16.safetensors"}
+  - {root: comfy, path: clip_vision/dino_v3_vit_l.safetensors, size: 1212559776,
+     sha256: 5cb785e458de7c460579082418af81f5c62380c181599344bdc60898c63468ee, required: true, used_by: "shape-generate (trellis2)",
+     url: "https://huggingface.co/Comfy-Org/TRELLIS.2/resolve/430a9d09b2416687018c8fe8edced2ad4858a439/clip_vision/dino_v3_vit_l.safetensors"}
+  - {root: comfy, path: diffusion_models/pixal3d_multiview_bf16.safetensors, size: 10999317704,
+     sha256: 302d00adb453f089c87ea083ebde2c9087bc259170d17910136ad1d8231f49a3, required: false, used_by: "Pixal3D method A (dead end)",
+     url: "https://huggingface.co/Comfy-Org/Pixal3D/resolve/f37641be376725d324c56626007cc477f1249a69/diffusion_models/pixal3d_multiview_bf16.safetensors"}
+  - {root: comfy, path: clip_vision/dino_v3_L_naf_fp32.safetensors, size: 1215214176,
+     sha256: 4ad2ec4e0879a5b5b04cd97325cc37da954a7b6edca5170b86510f17f2b2290f, required: false, used_by: "Pixal3D method A (dead end)",
+     url: "https://huggingface.co/Comfy-Org/Pixal3D/resolve/f37641be376725d324c56626007cc477f1249a69/clip_vision/dino_v3_L_naf_fp32.safetensors"}
+  - {root: comfy, path: background_removal/birefnet.safetensors, size: 444473596,
+     sha256: 9ab37426bf4de0567af6b5d21b16151357149139362e6e8992021b8ce356a154, required: false, used_by: "BiRefNet keying (not used by the driver)",
+     url: "https://huggingface.co/Comfy-Org/BiRefNet/resolve/25511f8787e51912e1480706b4e47b8f467fbf72/background_removal/birefnet.safetensors"}
+  # --- Hunyuan3D-Omni (~/ai/hunyuan3d-omni/INSTALL.md, download-weights.sh)
+  - {root: omni, path: Hunyuan3D-Omni/model/pytorch_model.bin, size: 12203119470,
+     sha256: 01c95e5f2588e324ebc05268231c92b3b1d9e83e5163723100ac958226c12a24, required: true, used_by: "Omni shape and heads",
+     url: "https://huggingface.co/tencent/Hunyuan3D-Omni/resolve/70e803bfb4e127d534049d8ab8c8cb511780d485/model/pytorch_model.bin"}
+  - {root: omni, path: Hunyuan3D-Omni/vae/pytorch_model.bin, size: 1311145138,
+     sha256: 379995ca170d8a899019125f389ba8692b2e35625ff64ddc3fdaa8c9302ac340, required: true, used_by: "Omni shape and heads",
+     url: "https://huggingface.co/tencent/Hunyuan3D-Omni/resolve/70e803bfb4e127d534049d8ab8c8cb511780d485/vae/pytorch_model.bin"}
+  - {root: omni, path: Hunyuan3D-Omni/cond_encoder/pytorch_model.bin, size: 464828,
+     sha256: f3f308e73153000ed566e985e2b1e38e9b40c12e23b7e6ecf89ce3ea1699c432, required: true, used_by: "Omni shape and heads",
+     url: "https://huggingface.co/tencent/Hunyuan3D-Omni/resolve/70e803bfb4e127d534049d8ab8c8cb511780d485/cond_encoder/pytorch_model.bin"}
+  - {root: omni, path: dinov2-large/model.safetensors, size: 1217522888,
+     sha256: 399fba97a95f22c36834418bc69373364a99af3a1153da1c0fb31db567c92e23, required: true, used_by: "Omni image encoder",
+     url: "https://huggingface.co/facebook/dinov2-large/resolve/47b73eefe95e8d44ec3623f8890bd894b6ea2d6c/model.safetensors"}
+  # --- Hunyuan3D-Paint 2.1 (~/ai/hy3dpaint/INSTALL.md, download-weights.sh)
+  - {root: paint, path: Hunyuan3D-2.1/hunyuan3d-paintpbr-v2-1/unet/diffusion_pytorch_model.bin, size: 3925293863,
+     sha256: 675a1b5cd0098b2002637c443946529c03c5cd54427f40245263350feb3dd5b8, required: true, used_by: "Paint 2.1 (colour)",
+     url: "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-paintpbr-v2-1/unet/diffusion_pytorch_model.bin"}
+  - {root: paint, path: Hunyuan3D-2.1/hunyuan3d-paintpbr-v2-1/text_encoder/pytorch_model.bin, size: 1361671895,
+     sha256: c3e254d7b61353497ea0be2c4013df4ea8f739ee88cffa0ba58cd085459ed565, required: true, used_by: "Paint 2.1 (colour)",
+     url: "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-paintpbr-v2-1/text_encoder/pytorch_model.bin"}
+  - {root: paint, path: Hunyuan3D-2.1/hunyuan3d-paintpbr-v2-1/image_encoder/model.safetensors, size: 1264217240,
+     sha256: ae616c24393dd1854372b0639e5541666f7521cbe219669255e865cb7f89466a, required: true, used_by: "Paint 2.1 (colour)",
+     url: "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-paintpbr-v2-1/image_encoder/model.safetensors"}
+  - {root: paint, path: Hunyuan3D-2.1/hunyuan3d-paintpbr-v2-1/vae/diffusion_pytorch_model.bin, size: 334707217,
+     sha256: 1b4889b6b1d4ce7ae320a02dedaeff1780ad77d415ea0d744b476155c6377ddc, required: true, used_by: "Paint 2.1 (colour)",
+     url: "https://huggingface.co/tencent/Hunyuan3D-2.1/resolve/0b94677654c57bb9a6b6845cd7b704ccf551d327/hunyuan3d-paintpbr-v2-1/vae/diffusion_pytorch_model.bin"}
+  - {root: paint, path: dinov2-giant/model.safetensors, size: 4546005432,
+     sha256: 917d3c470db999d32a312f8542149be91c7cbac61ee8fb4b67ae3d82b79ce21f, required: true, used_by: "Paint 2.1 (colour)",
+     url: "https://huggingface.co/facebook/dinov2-giant/resolve/611a9d42f2335e0f921f1e313ad3c1b7178d206d/model.safetensors"}
+  - {root: paint, path: ckpt/RealESRGAN_x4plus.pth, size: 67040989,
+     sha256: 4fa0d38905f75ac06eb49a7951b426670021be3018265fd191d2125df9d682f1, required: true, used_by: "Paint 2.1 (view upscale)",
+     url: "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "profile_type": "surface_calibration",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "study_id": "M03_BODY_PBR_01",
+  "scope": "Inherited HD body, wings, tail, horns and legs through their LOD materials",
+  "lods": {
+    "LOD0": {"roughness": 0.62, "specular_ior_level": 0.32, "normal_strength": 1.1},
+    "LOD1": {"roughness": 0.65, "specular_ior_level": 0.3, "normal_strength": 1.05},
+    "LOD2": {"roughness": 0.69, "specular_ior_level": 0.28, "normal_strength": 1.0}
+  },
+  "preserve": ["mesh positions", "topology", "UVs", "vertex weights", "actions", "armature", "packed base-color textures", "packed normal textures"],
+  "not_covered": ["separate skin-versus-wing roughness masks", "metallic/roughness texture packing", "Unity import validation", "mouth topology and interior"],
+  "human_gates": ["matched turntable", "game camera material response", "target runtime material parity"],
+  "notes": "Use only as a conservative shader-only study. It is not a finished material specification."
+}

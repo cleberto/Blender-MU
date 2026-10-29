@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "dragon-jaw-bone02",
+  "status": "verified",
+  "applies_to": ["mu:monster:monster03"],
+  "finding": "Original BMD has a separate lower-jaw mesh island of four faces/six vertices; Bone02 rotates in attacks. The HD GLB retained animation/weights but fused the mouth into a visually closed continuous head.",
+  "guidance": "Bone02 genuinely drives the lower snout, but splitting/reweighting the inherited continuous mesh causes jagged seams or cheek tears. Rebuild head mouth topology with separate upper jaw, lower jaw and cavity, using the original jaw island as spatial/rig guide rather than a final surface; test actions 3/4 and game LOD1 before surfacing. Do not repeat attempts 01-04 as a final repair.",
+  "evidence": ["catalog/runs/monster03-v0001-audit-20261018.json", "catalog/runs/monster03-v0002-jaw-experiments-20261018.json", "docs/monster03-v0002-experiments.md", "work/monster03/original-components.json", "work/monster03/diagnostic-renders/attempt04/action03-frame00-side.png"],
+  "superseded_by": null
+}

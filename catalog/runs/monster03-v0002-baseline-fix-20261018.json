@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-baseline-fix-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "reference",
+  "status": "completed",
+  "started_at": "2026-10-18T20:50:00-03:00",
+  "finished_at": "2026-10-18T20:53:00-03:00",
+  "goal": "Preserve all seven inactive original BMD actions when saving the baseline scene",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {"bmd_actions_use_fake_user": true, "original_auto_fit": false},
+  "inputs": ["tools/prepare_dragon_baseline.py", "work/monster03/budge-dragon-baseline.blend"],
+  "steps": [
+    "Found original action_0, action_2..action_6 missing after reopening the first baseline.",
+    "Marked all imported BMD actions as fake users before saving a new scene.",
+    "Reopened the corrected scene; verified action_0..action_6 and action00..action06 are present.",
+    "Rendered original side/front views for actions 0, 3 and 4."
+  ],
+  "outputs": ["work/monster03/budge-dragon-baseline-v2.blend", "work/monster03/original-renders/action03-frame00-side.png"],
+  "observations": [
+    "Corrected .blend SHA-256 BBDB22A6B88840710BD50487A23B4B24009C3C1060A25EDC65CEE26597D38D15.",
+    "Original BMD render shows a separate triangular lower jaw with visible opening, unlike inherited HD GLB.",
+    "Original rendering is provisional because addon reports rest-vs-bind mismatch on 29/39 bones."
+  ],
+  "checks": [
+    {"name": "all fourteen reference actions persisted", "result": "pass", "evidence": "Blender reopened work/monster03/budge-dragon-baseline-v2.blend and listed action_0..6 plus action00..06"},
+    {"name": "original action renders generated", "result": "pass", "evidence": "work/monster03/original-renders/action03-frame00-side.png"},
+    {"name": "original pose parity with Unity", "result": "unknown", "evidence": "Unity license unavailable"}
+  ]
+}

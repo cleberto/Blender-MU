@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "label": "Budge Dragon",
+  "status": "experimental",
+  "source_scene": "work/monster03/budge-dragon-baseline-v2.blend",
+  "source_glb": "models/budge-dragon-hd.glb",
+  "builder_script": "tools/build_hd_jaw_gradient_test.py",
+  "render_script": "tools/render_monster_pose_sheet.py",
+  "compose_script": "tools/compose_monster_pose_sheet.py",
+  "candidate_scene_name": "candidate.blend",
+  "armature": "mu_root",
+  "lod_meshes": ["LOD0", "LOD1", "LOD2"],
+  "actions": ["action00", "action01", "action02", "action03", "action04", "action05", "action06"],
+  "regions": {
+    "head": ["Bip01 Head"],
+    "jaw": ["Bone02"],
+    "left_wing": ["Bip01 L Clavicle", "Bip01 L UpperArm", "Bip01 L Forearm", "Bip01 L Hand"],
+    "right_wing": ["Bip01 R Clavicle", "Bip01 R UpperArm", "Bip01 R Forearm", "Bip01 R Hand"],
+    "tail": ["Bip01 Tail", "Bip01 Tail1", "Bip01 Tail2", "Bip01 Tail3"],
+    "legs": ["Bip01 L Thigh", "Bip01 R Thigh", "Bip01 L Foot", "Bip01 R Foot"]
+  },
+  "requires_mouth_interior": true,
+  "human_gates": ["head_and_mouth_in_motion", "body_wing_tail_silhouette", "game_camera_materials", "unity_ingame"],
+  "notes": "The builder is a jaw-weight experiment. It does not claim a finished HD dragon; mouth topology, interior, all-action deformation and Unity remain incomplete."
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-export-probe-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "export",
+  "status": "completed",
+  "started_at": "2026-10-18T20:49:00-03:00",
+  "finished_at": "2026-10-18T20:50:00-03:00",
+  "goal": "Verify Blender 5.2.2 GLB round-trip preserves HD rig and seven actions without reference action contamination",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {"selection": ["mu_root", "LOD0", "LOD1", "LOD2"], "export_format": "GLB", "animation_mode_final": "NLA_TRACKS"},
+  "inputs": ["work/monster03/budge-dragon-baseline.blend", "models/budge-dragon-hd.glb"],
+  "steps": [
+    "Exported selected HD objects using ACTIONS: observed unwanted BMD action_1, yielding eight clips.",
+    "Re-exported with NLA_TRACKS: retained exactly seven named HD clips."
+  ],
+  "outputs": ["tools/probe_glb_roundtrip.py", "work/monster03/roundtrip-probe.glb", "work/monster03/roundtrip-probe.json"],
+  "observations": [
+    "Final probe GLB contains LOD0/1/2, one skin of 39 joints, three materials, six images, seven clips.",
+    "Clip array order is action06..action00, so downstream importer must map by name."
+  ],
+  "checks": [
+    {"name": "seven HD clips exported", "result": "pass", "evidence": "work/monster03/roundtrip-probe.json"},
+    {"name": "Unity clip import and parity", "result": "unknown", "evidence": "Unity Editor license unavailable"}
+  ],
+  "lessons": ["knowledge/lessons/blender-gltf-action-export.json"]
+}

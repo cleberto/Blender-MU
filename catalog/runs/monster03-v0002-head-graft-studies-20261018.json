@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-head-graft-studies-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T20:58:00-03:00",
+  "finished_at": "2026-10-18T21:00:00-03:00",
+  "goal": "Evaluate whether controlled deletion of the inherited HD head can join the articulated head study to the existing neck",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "gpu": "NVIDIA GeForce GTX 1080 Ti 11 GiB"},
+  "parameters": {
+    "probe01": {"script": "tools/test_head_graft.py", "y_less_than": -31, "abs_x_less_than": 20, "z_between": [106, 166]},
+    "probe02": {"script": "tools/build_head_study02.py", "y_less_than": -42, "abs_x_less_than": 20, "z_between": [105, 158], "upper_back_rings": [[-38, 15, 157, 126], [-41, 15, 155, 124]]}
+  },
+  "inputs": ["work/monster03/v0002-head-study-01.blend", "models/budge-dragon-hd.glb"],
+  "steps": [
+    "Measured world-coordinate slices of the inherited LOD0 mesh.",
+    "Removed head faces only from a copied LOD0 mesh and combined it with the articulated head study.",
+    "Tried a smaller removal volume and shorter skull back; rendered idle and attack views."
+  ],
+  "outputs": [
+    "work/monster03/head-source-slices.json",
+    "work/monster03/v0002-head-graft-probe.blend",
+    "work/monster03/head-graft-probe-report.json",
+    "work/monster03/v0002-head-study-02.blend",
+    "work/monster03/head-study-02-report.json",
+    "work/monster03/diagnostic-renders/head-study-02/action03-frame00-side.png",
+    "docs/monster03-v0002-experiments.md"
+  ],
+  "observations": [
+    "Probe01 removes 1380 of 6002 faces; the neck is open and the horn floats above the skull.",
+    "Probe02 removes 946 faces; contact improves but the neck seam is jagged and horn root exposed in attack.",
+    "A production graft requires compatible topology loops and graded weights through the Neck and Head chain.",
+    "The source LOD0 has 3062 boundary edges already, so global boundary-edge totals cannot judge the local graft; visible neck defects decide rejection."
+  ],
+  "checks": [
+    {"name": "jaw opens without cheek tear", "result": "pass", "evidence": "work/monster03/diagnostic-renders/head-study-02/action03-frame00-side.png"},
+    {"name": "seamless head-to-neck deformation", "result": "fail", "evidence": "work/monster03/diagnostic-renders/head-study-02/action03-frame00-side.png"},
+    {"name": "horn attachment and identity", "result": "fail", "evidence": "work/monster03/diagnostic-renders/head-study-02/action00-frame00-side.png"}
+  ]
+}

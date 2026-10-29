@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "profile_type": "mu_asset_recipe",
+  "asset_id": "mu:<kind>:<slug>",
+  "version": "v0001",
+  "kind": "monster|item|world_prop|effect|material|shader",
+  "status": "experimental",
+  "source": {
+    "scene": "work/<slug>/baseline.blend",
+    "original_files": ["assets/original/<slug>/..."],
+    "references": ["work/<slug>/reference/..."],
+    "immutable": true
+  },
+  "build": {
+    "builder_script": "tools/<kind>_builder.py",
+    "candidate_scene_name": "candidate.blend",
+    "parameters": {}
+  },
+  "validation": {
+    "technical": ["topology", "uv", "materials", "textures", "scale", "pivot", "lod"],
+    "visual": ["silhouette", "surface", "target_camera"],
+    "motion": [],
+    "integration": ["target_runtime"]
+  },
+  "notes": "Replace every placeholder before execution. This template documents a recipe; it is not yet a generic executable engine."
+}

@@ -1,0 +1,150 @@
+# Elite Yeti: the pilot of the HD monster pipeline. Every value reproduces what the pilot ran (docs/hd-monster-
+# pipeline.md); the schema is README.md beside this file. Coordinates are MU model space in the generation pose
+# (x right of the monster's left, -y = the direction it faces, z up); pixels are the 1024 head close-up's.
+kind: monster
+asset: monster14
+label: Elite Yeti
+bmd: Monster/Monster14.bmd
+texture_dirs: [Monster]
+pose: [0, 0]            # generation pose (action, key): the rest pose; STOP1 showed limb-clear poses shred
+budget: 12000
+client:
+  model: MODEL_ELITE_YETI
+  index: 13             # MONSTER_MODEL_ELITE_YETI (_enum.h); server monster 20, Devias
+  scale: 1.4            # CreateMonster Object.Scale (not baked, conventions v1 item 3)
+  play_speed: [0.25, 0.2, 0.28, 0.33, 0.33, 0.5, 0.55]   # OpenMonsterModel defaults + the Yeti's walk override
+  hold_last_actions: [6]                                 # Action_t::Loop: MONSTER01_DIE only
+
+meshes:                 # BMD meshes and their roles (README: body / card / effect / accessory)
+  - {index: 0, texture: snowman02.jpg, role: body}
+
+bones:
+  head: ["Bip01 Head", "Box03"]     # BoneHead 20 and the crown bone under it
+  neck: ["Bip01 Neck"]
+  jaw: []
+  hands: ["Bip01 R Hand", "Bip01 R Finger0", "Bip01 L Hand", "Bip01 L Finger0"]
+  feet: ["Bip01 L Foot", "Bip01 R Foot"]
+  sockets: ["Bip01 Head", "Box03"]  # head turn and the breath-smoke bone
+  limb_roots: ["Bip01 L Thigh", "Bip01 R Thigh", "Bip01 L Clavicle", "Bip01 R Clavicle"]
+  rigid: []                         # rigid accessories (weapons, wings); the Yeti's crystals are part of the skin
+  spikes: {bones: ["Bip01 R UpperArm", "Bip01 L UpperArm"], min_z: 128.0}   # shoulder crystals above the shoulders
+  smooth_exclude: ["Bip01 R Hand", "Bip01 R Finger0", "Bip01 R Finger01", "Bip01 R Finger02",
+                   "Bip01 L Hand", "Bip01 L Finger0", "Bip01 L Finger01", "Bip01 L Finger02",
+                   "Box11", "Box12", "Box06", "Box07",
+                   "Bip01 L Foot", "Bip01 L Toe0", "Bip01 L Toe01", "Bip01 L Toe02",
+                   "Bip01 R Foot", "Bip01 R Toe0", "Bip01 R Toe01", "Bip01 R Toe02"]
+  seam: ["Bip01 R Forearm", "Bip01 R UpperArm"]   # look-seams: the arm whose chart borders showed in game
+
+concept:
+  subject: "the white yeti monster"
+  detail: "thick white fur with clumps and strands, visible skin and muscle shape under the fur, sharp claws, a detailed face with eyes, nose and fangs"
+  refine_prompt: "Edit <image1>: keep this image exactly as it is: the same white yeti monster, the same pose, the same position and size in the frame, the same colours, the same lighting and the same plain grey background. Only make it sharper and higher resolution, with finer real detail: crisp fur strands and clumps, a detailed face with eyes, nose, lips and fangs, sharp claws, crisp faceted ice crystal spikes."
+
+picks:                  # MANUAL: the operator's picks
+  concept: qwen-faithful-s22   # G1 'loved'
+  omni_seed: 2                 # omni/faithful-point-s2.glb
+  head_candidate: omni-s2      # G6 clay sheet
+
+names:
+  prefix: omni-faithful
+
+budgets:
+  lod_triangles: [8000, 2500, 1000]
+  head_share: 0.19
+  head_share_min: 0.17
+  density: {head: 2.0, hands: 1.6, spikes: 1.6, body: 1.0}
+
+head:
+  enabled: true
+
+depth:
+  tile_mu_per_px: 0.12
+
+smoothing:              # smooth.DENSE_PRESETS / REBUILD_PRESETS (smooth.json / rebuild.json of the pilot)
+  passes: ["5a", "5a2"]
+  keep: "5a2"
+  dense:
+    5a: {coarse_pairs: 200, close_radius: 1.0, fine_pairs: 0}
+    5a2: {input: "5a", coarse_pairs: 600, close_radius: 1.75, fine_pairs: 0}
+  rebuild:
+    5a: {name: smooth, tile_strength: null, lowpass: false}
+    5a2: {name: smooth2, tile_strength: 0.3, lowpass: true}
+
+face:
+  enabled: true
+  fit_mode: keep-mouth          # the smooth2 face fit; the face passes fit with mode all
+  # name: [[concept x, y], [geometry x, y]], read BY EYE on the gridded 1024 close-up and clay render
+  landmarks:
+    eye_l: [[438, 635], [420, 645]]
+    eye_r: [[679, 637], [606, 648]]
+    brow_centre: [[551, 600], [510, 605]]
+    nose_tip: [[551, 709], [508, 696]]
+    mouth_l: [[457, 826], [422, 776]]
+    mouth_r: [[656, 829], [610, 776]]
+    fang_l: [[484, 868], [460, 788]]
+    fang_r: [[642, 868], [572, 788]]
+    wing_l: [[251, 600], [197, 647]]
+    wing_r: [[850, 596], [803, 654]]
+    crown_base: [[551, 380], [512, 417]]
+  mouth_group: [mouth_l, mouth_r, fang_l, fang_r]   # keep-mouth: moved rigidly with the nose
+  region: [330, 560, 720, 860]                      # close-up px: eyes to chin, between the cheeks
+  plane_y_mu: -60.0                                 # the face's depth (pixel -> MU scale)
+  thin_part: {thickness_mu: 7.0, min_z: 129.0}      # thin parts above this z keep no face paint (crystals)
+  passes:
+    - name: face2
+      input: smooth2
+      report: face2/geometry.json
+      box: [[-24.0, -74.0, 112.0], [26.0, -26.0, 170.0]]
+      ops:
+        - op: move-part           # the side crystal plates off the eye line
+          role: plate
+          select: {thin_below_mu: 7.0, min_faces: 2000, front_y_below: -48.0, below_z: 140.0,
+                   centre_x: 1.6, off_centre_mu: 4.0, sides: [L, R]}
+          reach_mu: 4.0
+          grow_mu: 2.0
+          moves: {L: [-0.5, 0.0, 4.0], R: [0.5, 0.0, 4.0]}
+          eyes: {L: [-3.0, -50.7, 132.7], R: [6.3, -51.1, 132.7]}
+          eye_radius: 1.7
+          landmarks: {L: wing_l, R: wing_r}
+          landmark_plane: [0.0, -50.9, 132.7]
+        - op: carve-ellipsoid     # the open mouth
+          role: mouth
+          centre: [1.5, -51.0, 124.05]
+          semi: [5.8, 3.5, 2.15]
+          surface_y: -52.0
+          landmarks: [mouth_l, mouth_r]
+        - {op: add-round-cone, role: fang, top: [-2.1, -52.6, 125.6], tip: [-2.1, -52.8, 121.9], r_top: 0.55,
+           r_tip: 0.08, landmark: fang_l}
+        - {op: add-round-cone, role: fang, top: [5.8, -52.6, 125.6], tip: [5.8, -52.8, 121.9], r_top: 0.55,
+           r_tip: 0.08, landmark: fang_r}
+    - name: face3
+      input: face2
+      report: face2/face3-geometry.json
+      box: [[-12.0, -60.0, 124.0], [16.0, -40.0, 142.0]]
+      ops:
+        - {op: add-ellipsoid, role: filler, side: L, centre: [-3.5, -47.6, 132.7], semi: [3.2, 3.0, 2.4]}
+        - {op: add-ellipsoid, role: eyeball, side: L, centre: [-3.2, -50.2, 132.7], semi: [1.9, 2.1, 1.6],
+           landmark: eye_l}
+        - {op: add-ellipsoid, role: filler, side: R, centre: [6.8, -47.6, 132.7], semi: [3.2, 3.0, 2.4]}
+        - {op: add-ellipsoid, role: eyeball, side: R, centre: [6.5, -50.3, 132.7], semi: [1.9, 2.1, 1.6],
+           landmark: eye_r}
+      ao_soft:
+        keep: 0.25
+        regions: [{centre: [-3.2, -51.0, 132.7], radius: 3.6}, {centre: [6.5, -51.0, 132.7], radius: 3.6},
+                  {centre: [1.5, -51.0, 124.05], radius: 6.0}]
+
+look:
+  name: lookC2
+  seam_compare: {lookC: "round 2 in game"}   # look-seams: earlier looks shown beside the colour and the look
+  concept_light: [0.35, -0.55, 0.76]
+  params: {form: 0.7, ao_power: 2.0, darken: 1.0, lift: 0.4, bleed: true}
+  paint: {tooth: [0.86, 0.83, 0.76], mouth_dark: [0.20, 0.12, 0.12], iris: [0.66, 0.66, 0.52],
+          pupil: [0.10, 0.10, 0.08]}
+
+# per-model Enhanced lighting (asset.extras.mu.lighting): none. Operator 2026-10-16: drop the planned
+# {sky: 0.35, normalScale: 1.8}, so a rerun writes a GLB without the key, like the accepted one.
+lighting: null
+
+stages:
+  ingame:
+    verdict: "operator 2026-10-14: a good candidate (lookC2, round 3 captures). Operator 2026-10-16: plug omni-faithful-headhd-smooth2-face3-lookC2-hd into the private client."

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mu-asset-lab.local/schemas/asset.schema.json",
+  "type": "object",
+  "required": ["schema_version", "id", "kind", "slug", "name", "current_version", "versions", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^mu:[a-z_]+:[a-z0-9_-]+$"},
+    "kind": {"type": "string", "enum": ["monster", "item", "npc", "world_prop", "map", "effect", "character", "animation", "material", "shader", "ui", "other"]},
+    "slug": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "name": {"type": "string", "minLength": 1},
+    "mu_id": {"type": ["string", "integer", "null"]},
+    "aliases": {"type": "array", "items": {"type": "string"}},
+    "current_version": {"type": ["string", "null"], "pattern": "^v[0-9]{4}$"},
+    "versions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^v[0-9]{4}$"}},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+    "origin_hint": {"type": ["string", "null"]},
+    "references": {"type": "array", "items": {"type": "string"}},
+    "tags": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "file": {"type": "object", "required": ["path", "sha256"], "additionalProperties": false,
+      "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}, "role": {"type": "string"}}}
+  }
+}

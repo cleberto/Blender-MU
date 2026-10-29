@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-baseline-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "reference",
+  "status": "completed",
+  "started_at": "2026-10-18T20:34:00-03:00",
+  "finished_at": "2026-10-18T20:35:40-03:00",
+  "goal": "Open a reproducible original-versus-HD baseline in local Blender without changing sources",
+  "actor": "Codex",
+  "environment": {
+    "blender": "5.2.2 LTS",
+    "python": "3.9 for texture decoding; Blender embedded Python for scene assembly",
+    "target": "Unity/OpenMU (integration not yet tested)"
+  },
+  "parameters": {
+    "original_bmd_scale": 1.0,
+    "original_auto_fit": false,
+    "hd_transform": "as imported from supplied GLB",
+    "original_collection_hidden_at_open": true,
+    "texture_decoding": "standard-library OZJ JPEG extraction + OZT BGRA-to-PNG"
+  },
+  "inputs": [
+    "assets/original/monster03/Monster03.bmd",
+    "assets/original/monster03/p_d.OZJ",
+    "assets/original/monster03/p_d.OZT",
+    "models/budge-dragon-hd.glb",
+    "vendor/mu-blender-addon/manifest.json"
+  ],
+  "steps": [
+    "Converted original textures with tools/decode_legacy_textures.py and recorded source/output hashes.",
+    "Imported BMD without auto-fit and GLB unchanged into separate collections; packed images into the .blend.",
+    "Reopened saved .blend in Blender background mode and opened it in the visible Blender application."
+  ],
+  "outputs": [
+    "tools/decode_legacy_textures.py",
+    "tools/prepare_dragon_baseline.py",
+    "tools/open_dragon.ps1",
+    "work/monster03/textures/decode-report.json",
+    "work/monster03/baseline-report.json",
+    "work/monster03/budge-dragon-baseline.blend"
+  ],
+  "observations": [
+    "Baseline .blend SHA-256: 8FB58C25DBFD584C162161FF2243AD32C3719453B7D46E0CB5508C5E5471A122; Blender discarded six inactive BMD actions on save; superseded by corrected baseline v2.",
+    "Blender reopened two BMD meshes (324/8 faces), three HD LOD meshes (6002/2002/802 faces), packed eight images, and also found an importer-created Icosphere helper (80 faces) absent from GLB nodes.",
+    "Addon still reports rest-vs-bind mismatch for 29/39 original bones; Unity scale/axes and deformation parity remain unverified.",
+    "No remodel, Unity integration, or visual acceptance was performed in this run."
+  ],
+  "checks": [
+    {"name": "source texture hashes", "result": "pass", "evidence": "work/monster03/textures/decode-report.json"},
+    {"name": "saved Blender scene reopens", "result": "pass", "evidence": "work/monster03/baseline-report.json and Blender 5.2.2 background reopen output"},
+    {"name": "original bind pose parity", "result": "fail", "evidence": "Addon diagnostic: rest-vs-bind mismatch bones 29/39; cause pending"},
+    {"name": "Unity A/B parity", "result": "unknown", "evidence": "No Unity Editor spike performed yet"}
+  ]
+}

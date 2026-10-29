@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-body-pbr-profile-replay-20261019",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "surface",
+  "status": "completed",
+  "started_at": "2026-10-19T01:15:00-03:00",
+  "finished_at": "2026-10-19T01:18:00-03:00",
+  "goal": "Prove that M03_BODY_PBR_01 can be replayed from a machine-readable surface profile.",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "python": "3.9"},
+  "parameters": {"surface_profile": "profiles/monster03.surface.json", "output_override": "work/monster03/body-pbr-profile-replay/candidate.blend"},
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "profiles/monster03.surface.json", "schemas/surface-calibration.schema.json", "tools/build_body_material_calibration.py"],
+  "steps": ["Load the baseline", "Load scalar values from the surface profile", "Build an isolated candidate", "Fingerprint source and candidate", "Compare structural signatures"],
+  "outputs": ["work/monster03/body-pbr-profile-replay/candidate.blend", "work/monster03/body-pbr-profile-replay/candidate.material-parameters.json", "work/monster03/body-pbr-profile-replay/fingerprint.json", "work/monster03/body-pbr-profile-replay/preservation.json"],
+  "observations": ["The replay emitted the same LOD scalar controls as M03_BODY_PBR_01 from the JSON profile.", "Mesh geometry, UVs, weights, actions and packed image signatures remain identical to the source; material identities differ by design.", "The profile makes the study reproducible, but it does not convert the experimental material result into an approved asset."],
+  "checks": [
+    {"name": "profile-driven structural preservation", "result": "pass", "evidence": "work/monster03/body-pbr-profile-replay/preservation.json"},
+    {"name": "surface artistic approval", "result": "manual", "evidence": "work/monster03/body-probe/body-pbr-comparison.png"}
+  ],
+  "lessons": ["knowledge/lessons/shader-only-preservation.json"]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "monster-hd-v1",
+  "revision": 1,
+  "status": "experimental",
+  "scope": ["monster", "npc", "character"],
+  "inherits_from": ["docs/hd-model-pipeline.md", "docs/hd-model-reproduce.md"],
+  "stages": [
+    {"id": "source", "output": "BMD, textures, hashes, skeleton and action inventory", "gate": "Source files and provenance verified"},
+    {"id": "reference", "output": "Matched original views and animation frames", "gate": "Reference is readable in front, side, back, top and game camera"},
+    {"id": "concept", "output": "Candidate sheets with prompt, model, revision and seed", "gate": "Human selects identity, proportions and materials"},
+    {"id": "geometry", "output": "Editable high detail mesh and topology report", "gate": "Silhouette, anatomy and required openings/parts pass review"},
+    {"id": "rig", "output": "Skinned mesh with actions and effect sockets", "gate": "No unacceptable tearing, clipping or lost effect points in any action"},
+    {"id": "surface", "output": "UV, base color, normal, roughness and optional emission", "gate": "Material reads in neutral light and game light without baked lighting errors"},
+    {"id": "lod", "output": "LOD0, LOD1, LOD2 and texture atlases", "gate": "Silhouette and moving parts survive default camera LOD"},
+    {"id": "export", "output": "GLB plus technical report", "gate": "Scale, pivot, names, actions, weights, texture size and hash pass"},
+    {"id": "ingame", "output": "Matched screenshots or video and operator verdict", "gate": "Human approval at close-up and normal game camera"}
+  ],
+  "defaults": {
+    "units": "MU model units; record conversion per asset",
+    "max_weights_per_vertex": 4,
+    "max_texture_edge_for_reference_client": 2048,
+    "lod_count": 3,
+    "silhouette_policy": "measure against original; any accepted deviation requires named human decision"
+  },
+  "quality_policy": {
+    "automated_fail": "stop and diagnose; preserve measured failure",
+    "manual_gate": "record reviewer, date, evidence and reason",
+    "approved_requires": ["technical checks", "visual motion review", "game camera review"]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "mu:monster:monster03",
+  "kind": "monster",
+  "slug": "monster03",
+  "name": "Budge Dragon (dragão de Lorencia)",
+  "mu_id": 2,
+  "aliases": [
+    "Budge Dragon",
+    "dragão de Lorencia"
+  ],
+  "current_version": "v0001",
+  "versions": [
+    "v0001",
+    "v0002"
+  ],
+  "sources": [
+    {
+      "role": "source_model",
+      "path": "assets/original/monster03/Monster03.bmd",
+      "sha256": "9758900D276F4DB86F237A31C0617FA00EE04469D964865E71BDDA01E20AE474"
+    },
+    {
+      "role": "source_color",
+      "path": "assets/original/monster03/p_d.OZJ",
+      "sha256": "A1A4673400834EAB6ADC190CAA268516D81DA5B23A88985686EBD95F5FEFEF68"
+    },
+    {
+      "role": "source_wing_alpha",
+      "path": "assets/original/monster03/p_d.OZT",
+      "sha256": "5F896E492CB80A7770074142F9FC921CAD40B99746A2B1331D6BBD26F2C679D3"
+    }
+  ],
+  "origin_hint": "E:\\Comuns\\Downloads\\Ult MU\\Data\\Monster",
+  "references": [
+    "examples/monster03.yaml",
+    "docs/dragao-lorencia-plano.md",
+    "demo/dragon-final-views.png"
+  ],
+  "tags": [
+    "lorencia",
+    "winged",
+    "jaw-review"
+  ]
+}

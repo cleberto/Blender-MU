@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "mu:monster:monster44",
+  "kind": "monster",
+  "slug": "monster44",
+  "name": "Bloody Wolf",
+  "mu_id": 43,
+  "aliases": ["Bloody Wolf"],
+  "current_version": "v0001",
+  "versions": ["v0001"],
+  "sources": [],
+  "origin_hint": "Original BMD is named Monster/Monster44.bmd in examples/monster44.yaml but has not been copied into this project.",
+  "references": ["examples/monster44.yaml", "demo/wolf-final-views.png"],
+  "tags": ["legacy-reference", "source-needed"]
+}

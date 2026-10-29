@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "id": "blender-gltf-action-export",
+  "status": "verified",
+  "applies_to": ["mu:monster:monster03"],
+  "finding": "Blender 5.2.2 GLB export with ACTIONS includes the unselected original BMD action_1 (eight clips). NLA_TRACKS exports only the seven HD tracks, but in reverse list order (06..00).",
+  "guidance": "For a GLB scene containing BMD reference plus HD candidate, export selected HD armature/LODs with export_animation_mode=NLA_TRACKS. Validate exactly seven named clips, map them to MU action indices by name rather than array order, and compare animation samples after round-trip.",
+  "evidence": ["tools/probe_glb_roundtrip.py", "work/monster03/roundtrip-probe.json", "work/monster03/roundtrip-probe.glb"]
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mu-asset-lab.local/schemas/monster-profile.schema.json",
+  "title": "Monster build profile",
+  "type": "object",
+  "required": ["schema_version", "asset_id", "version", "source_scene", "builder_script", "candidate_scene_name", "armature", "lod_meshes", "actions", "regions", "render_script", "compose_script", "human_gates"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "asset_id": {"type": "string", "pattern": "^mu:monster:[a-z0-9_-]+$"},
+    "version": {"type": "string", "pattern": "^v[0-9]{4}$"},
+    "label": {"type": "string"},
+    "status": {"enum": ["experimental", "validated"]},
+    "source_scene": {"type": "string"},
+    "source_glb": {"type": "string"},
+    "builder_script": {"type": "string"},
+    "render_script": {"type": "string"},
+    "compose_script": {"type": "string"},
+    "candidate_scene_name": {"type": "string", "pattern": "^[a-zA-Z0-9_-]+\\.blend$"},
+    "armature": {"type": "string"},
+    "lod_meshes": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "actions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "regions": {"type": "object", "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string"}}},
+    "requires_mouth_interior": {"type": "boolean"},
+    "human_gates": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}

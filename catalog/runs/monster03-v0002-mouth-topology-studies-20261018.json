@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-mouth-topology-studies-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T21:50:35-03:00",
+  "finished_at": "2026-10-18T21:50:35-03:00",
+  "goal": "Consolidate the corrected-axis cut and two HD mouth-volume studies with explicit rejection evidence",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "render_engine": "BLENDER_WORKBENCH"},
+  "parameters": {
+    "corrected_cut_script": "tools/experiment_jaw_correct_axis.py",
+    "mouth_volume_script": "tools/build_hd_mouth_volume_study.py",
+    "old_attempt03_plane_point": [0, -119, 0],
+    "old_attempt03_plane_normal": [0, 1, 0],
+    "corrected_plane_point": [0, 0, 120],
+    "corrected_plane_normal": [0, 0, 1],
+    "corrected_jaw_faces": 235,
+    "corrected_jaw_vertices": 181
+  },
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "work/monster03/v0002-hd-jaw-gradient-test.blend"],
+  "steps": ["Correct the prior cut-axis error", "Bind the separated lower region to Bone02", "Render idle and attack poses", "Add palate, tongue and fang geometry in two distinct studies", "Reject visible protrusions and unresolved lip/cheek topology"],
+  "outputs": ["work/monster03/v0002-attempt05-correct-axis-jaw.blend", "work/monster03/v0002-attempt05-report.json", "work/monster03/v0002-hd-mouth-volume-study.blend", "work/monster03/v0002-hd-mouth-volume-study-02.blend", "work/monster03/v0002-hd-mouth-volume-study-mouth-report.json", "work/monster03/v0002-hd-mouth-volume-study-02-mouth-report.json", "work/monster03/diagnostic-renders/attempt05-correct-axis/action03-frame00-side.png", "work/monster03/diagnostic-renders/hd-mouth-volume-study/action03-frame00-front.png", "work/monster03/diagnostic-renders/hd-mouth-volume-study-02/action03-frame00-front.png"],
+  "observations": [
+    "Attempt03's script documented a z=119 lip cut, but its plane point/normal actually cut y=-119, outside the head region. This invalidates its claimed planar-cut conclusion.",
+    "The corrected z=120 cut opens the mouth but creates an unnaturally flat jagged lip and an exposed cheek hinge; it is rejected as production topology.",
+    "Mouth-volume study 01 shows palate and teeth protruding over the snout; study 02 tucks the palate inward but retains penetrating fangs and an unconnected lip border.",
+    "Procedural inner tubes are useful as anatomical placement guides, not a substitute for retopologized upper/lower lip loops and volumetric cheek tissue."
+  ],
+  "checks": [
+    {"name": "correct-axis cut opens mouth", "result": "pass", "evidence": "work/monster03/diagnostic-renders/attempt05-correct-axis/action03-frame00-side.png"},
+    {"name": "correct-axis lip and hinge production quality", "result": "fail", "evidence": "work/monster03/diagnostic-renders/attempt05-correct-axis/action03-frame00-side.png"},
+    {"name": "mouth-volume study 01 idle appearance", "result": "fail", "evidence": "work/monster03/diagnostic-renders/hd-mouth-volume-study/action00-frame00-side.png"},
+    {"name": "mouth-volume study 02 attack anatomy", "result": "fail", "evidence": "work/monster03/diagnostic-renders/hd-mouth-volume-study-02/action03-frame00-front.png"}
+  ]
+}

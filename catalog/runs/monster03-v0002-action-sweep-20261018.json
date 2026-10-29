@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-action-sweep-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "rig",
+  "status": "completed",
+  "started_at": "2026-10-18T21:03:00-03:00",
+  "finished_at": "2026-10-18T21:05:00-03:00",
+  "goal": "Test the trial head across every frame of all seven inherited HD actions, beyond the originally selected attack poses",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {"script": "tools/measure_head_study.py", "actions": [0, 1, 2, 3, 4, 5, 6], "frame_step": 1,
+                 "landmarks": {"upper_muzzle_tip_vertex": 186, "lower_muzzle_tip_vertex": 126}},
+  "inputs": ["work/monster03/v0002-head-study-01.blend"],
+  "steps": ["Measured muzzle-tip world-space distance, vertical gap and longitudinal offset for each frame of all seven actions.", "Rendered the worst-looking frames from actions 0, 1 and 3 in side view."],
+  "outputs": ["work/monster03/head-study-01-action-sweep.json", "work/monster03/diagnostic-renders/head-study-01/action00-frame05-side.png", "work/monster03/diagnostic-renders/head-study-01/action01-frame10-side.png", "work/monster03/diagnostic-renders/head-study-01/action03-frame02-side.png"],
+  "observations": ["Vertical tip gap becomes negative in actions 0, 1, 2, 3, 4 and 6; a negative landmark value alone is not proof of collision because y coordinates differ.", "Side renders of action03 frame02 and action01 frame10 confirm visual muzzle-tip crossing and unacceptable bite geometry.", "Selected open attack poses had hidden this defect. The graybox rig is not final-ready."],
+  "checks": [
+    {"name": "all seven actions sampled", "result": "pass", "evidence": "work/monster03/head-study-01-action-sweep.json"},
+    {"name": "collision-free mouth through animations", "result": "fail", "evidence": "work/monster03/diagnostic-renders/head-study-01/action03-frame02-side.png"}
+  ]
+}

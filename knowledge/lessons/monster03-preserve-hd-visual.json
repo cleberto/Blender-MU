@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "id": "monster03-preserve-hd-visual",
+  "status": "verified",
+  "applies_to": ["mu:monster:monster03"],
+  "finding": "Matched 24-angle turntables show that the inherited HD GLB already has convincing whole-body silhouette, horn roots, eye sockets, cheek/neck integration and texture variation. The separately generated parametric head loses these qualities despite proving some jaw motion.",
+  "guidance": "Keep the inherited HD cranium, horns, eyes, neck, wings, body, tail and visual palette as the production appearance baseline. Use the parametric head only for rig/anatomy experiments. Retopologize the mouth region locally and rebuild a volumetric hinge on the HD surface, then transfer/bake its appearance and re-run full-action and matched-camera tests. Do not replace the complete head or creature with the graybox loft.",
+  "evidence": ["catalog/runs/monster03-v0002-360-calibration-20261018.json", "work/monster03/turntable/comparison-report.json", "work/monster03/turntable/head-comparison-360.gif", "work/monster03/turntable/legacy-full-360.gif", "docs/monster03-360-calibration.md"],
+  "superseded_by": null
+}

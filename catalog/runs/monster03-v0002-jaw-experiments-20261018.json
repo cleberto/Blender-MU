@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-jaw-experiments-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T20:36:00-03:00",
+  "finished_at": "2026-10-18T20:46:00-03:00",
+  "goal": "Test whether a local split of the inherited mesh can create a clean animated mouth",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS", "gpu": "NVIDIA GeForce GTX 1080 Ti 11 GiB"},
+  "parameters": {
+    "attempt02": {"mean_bone02_weight_threshold": 0.2, "jaw_solidify_thickness": 1.0},
+    "attempt03": {"local_cut_world_z": 119, "front_y_limit": -42},
+    "attempt04": {"jaw_weight_hinge_y": -42, "full_weight_y": -56}
+  },
+  "inputs": ["work/monster03/budge-dragon-baseline.blend", "models/budge-dragon-hd.glb"],
+  "steps": [
+    "Measured Bone02 weights and action motion in Blender; rendered matching close-ups.",
+    "Attempted weight-based lower-jaw separation, then local planar cut, then explicit jaw weight reassignment.",
+    "Inspected idle and attack side/front renders and rejected all variants for visible topology defects."
+  ],
+  "outputs": [
+    "docs/monster03-v0002-experiments.md",
+    "work/monster03/jaw-diagnosis.json",
+    "work/monster03/motion-report.json",
+    "work/monster03/v0002-attempt01-report.json",
+    "work/monster03/v0002-attempt02-report.json",
+    "work/monster03/v0002-attempt03-report.json",
+    "work/monster03/v0002-attempt04-report.json",
+    "work/monster03/diagnostic-renders/attempt04/action03-frame00-side.png"
+  ],
+  "observations": [
+    "Attempt01 selected all 6002 faces due Blender edit-mode selection synchronization; preserved as failed automation run.",
+    "Attempt02 opened a jagged seam; attempt03 remained closed; attempt04 opened but tore the cheek and produced a spike at the hinge.",
+    "A clean result requires head topology reconstruction with separate upper/lower surfaces and mouth cavity."
+  ],
+  "checks": [
+    {"name": "jaw opens in attack", "result": "pass", "evidence": "work/monster03/diagnostic-renders/attempt04/action03-frame00-side.png"},
+    {"name": "clean mouth topology and cheek deformation", "result": "fail", "evidence": "work/monster03/diagnostic-renders/attempt04/action03-frame00-side.png"},
+    {"name": "ready for Unity import", "result": "fail", "evidence": "All four variants rejected; no candidate GLB exported"}
+  ]
+}

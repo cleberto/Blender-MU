@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-jaw-rotation-floor-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "rig",
+  "status": "completed",
+  "started_at": "2026-10-18T21:05:00-03:00",
+  "finished_at": "2026-10-18T21:07:00-03:00",
+  "goal": "Test whether negative Bone02 X quaternion undershoot causes the study jaw to cross the maxilla",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {"script": "tools/experiment_jaw_rotation_floor.py", "bone": "Bone02", "curve": "rotation_quaternion[1]", "minimum": 0, "interpolation": "LINEAR", "source_actions": "action00..action06", "trial_actions": "floor_action00..floor_action06"},
+  "inputs": ["work/monster03/v0002-head-study-01.blend", "work/monster03/head-study-01-action-sweep.json"],
+  "steps": ["Copied each inherited HD action without modifying the source curves.", "Clamped negative Bone02 X key values and handles, then rendered and measured all-action trial poses."],
+  "outputs": ["work/monster03/v0002-jaw-rotation-floor-test.blend", "work/monster03/jaw-rotation-floor-report.json", "work/monster03/jaw-rotation-floor-action-sweep.json", "work/monster03/diagnostic-renders/jaw-rotation-floor-test/action03-frame02-side.png", "work/monster03/diagnostic-renders/jaw-rotation-floor-test/action01-frame25-side.png"],
+  "observations": ["The trial removes negative muzzle-tip gap in most actions and visibly resolves the action03 frame02 crossing.", "Action01 frames 25/26 still show the jaw displaced from the upper head in extreme head orientation; floor-clamping alone is insufficient.", "Some teeth and hinge geometry remain unvalidated in all frames."],
+  "checks": [
+    {"name": "source actions preserved", "result": "pass", "evidence": "work/monster03/jaw-rotation-floor-report.json"},
+    {"name": "action03 intermediate muzzle crossing resolved", "result": "pass", "evidence": "work/monster03/diagnostic-renders/jaw-rotation-floor-test/action03-frame02-side.png"},
+    {"name": "jaw alignment throughout all actions", "result": "fail", "evidence": "work/monster03/diagnostic-renders/jaw-rotation-floor-test/action01-frame25-side.png"}
+  ]
+}

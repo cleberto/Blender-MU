@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mu-asset-lab.local/schemas/lesson.schema.json",
+  "type": "object",
+  "required": ["schema_version", "id", "status", "applies_to", "finding", "guidance", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "status": {"enum": ["hypothesis", "verified", "superseded"]},
+    "applies_to": {"type": "array", "items": {"type": "string"}},
+    "finding": {"type": "string"},
+    "guidance": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "superseded_by": {"type": ["string", "null"]}
+  }
+}

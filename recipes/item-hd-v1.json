@@ -1,0 +1,15 @@
+{
+  "id": "item-hd-v1",
+  "revision": 1,
+  "status": "proposed",
+  "scope": ["item"],
+  "stages": [
+    {"id": "source", "output": "Original model, textures, game ID and hashes", "gate": "Identity and source verified"},
+    {"id": "reference", "output": "Orthographic views and equipped/inventory views", "gate": "Silhouette and hold point documented"},
+    {"id": "geometry", "output": "Editable mesh", "gate": "Recognizable proportions, clean edges and no geometry defects"},
+    {"id": "surface", "output": "UV and modern materials", "gate": "Material variants and glow preserve item identity"},
+    {"id": "export", "output": "LOD-ready game asset", "gate": "Pivot/socket, bounds, texture budget and format pass"},
+    {"id": "ingame", "output": "Equipped and inventory comparisons", "gate": "Human review in normal gameplay and close-up"}
+  ],
+  "defaults": {"material_channels": ["base_color", "normal", "roughness", "metallic", "emission_optional"]}
+}

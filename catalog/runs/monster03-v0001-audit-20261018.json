@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0001-audit-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0001",
+  "stage": "audit",
+  "status": "completed",
+  "started_at": "2026-10-18T20:12:00-03:00",
+  "finished_at": "2026-10-18T20:20:00-03:00",
+  "goal": "Identify original files, skeleton, animation and addon compatibility before repair.",
+  "actor": "Codex",
+  "environment": {"os": "Windows", "blender": "5.2.2 LTS", "python": "3.9 for BMD parser", "addon": "vendor/mu-blender-addon; snapshot of D:\\source\\mu-blender-addon-main; version 0.1.0", "addon_manifest": "vendor/mu-blender-addon/manifest.json"},
+  "parameters": {"bmd_import_textures": false, "glb_import": true, "bone_weight_threshold": 0.05},
+  "inputs": ["assets/original/monster03/Monster03.bmd", "assets/original/monster03/p_d.OZJ", "assets/original/monster03/p_d.OZT", "models/budge-dragon-hd.glb"],
+  "steps": ["Parsed original BMD with external addon's pure parser.", "Read glTF JSON and imported BMD/GLB in Blender background.", "Tested BMD import both with and without legacy texture loading."],
+  "outputs": ["docs/dragao-lorencia-plano.md", "tools/audit_dragon.py", "tools/blender_smoke.py"],
+  "observations": ["BMD v10: two meshes, 39 bones, 7 actions.", "Bone02 rotates in all actions; attack 3 span about 0.905 rad and four BMD vertices use it.", "HD LOD0 has 291 vertices with Bone02 weight over 0.05; the GLB retains Bone02 animation channels.", "Addon BMD import succeeds in Blender 5.2.2 with texture loading off; with it on, formats/textures.py fails because Pillow is unavailable in embedded Python.", "Addon logs rest-vs-bind mismatch for 29/39 bones; visual pose verification remains open."],
+  "checks": [
+    {"name": "source hashes recorded", "result": "pass", "evidence": "catalog/assets/monster/monster03/asset.json"},
+    {"name": "BMD and GLB structural import", "result": "pass", "evidence": "tools/blender_smoke.py"},
+    {"name": "legacy texture import", "result": "fail", "evidence": "NameError Image is not defined in external formats/textures.py"},
+    {"name": "jaw motion visually approved", "result": "manual", "evidence": "Pending matched animation frames"}
+  ],
+  "lessons": ["knowledge/lessons/dragon-jaw-bone02.json", "knowledge/lessons/addon-blender-52-textures.json"]
+}

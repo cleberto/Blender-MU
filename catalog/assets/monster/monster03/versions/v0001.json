@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster03",
+  "version": "v0001",
+  "status": "reference",
+  "created_at": "2026-10-18T20:20:00-03:00",
+  "parent_version": null,
+  "goal": "Catalog the supplied HD model as a reference baseline; do not treat its prior in-game acceptance as approval of the new quality target.",
+  "recipe": null,
+  "recipe_sha256": null,
+  "parameters": {
+    "source_manifest": "examples/monster03.yaml",
+    "source_manifest_sha256": "43bfc0366197e3c004d25648cc15294ef0ed716f55db55d32c9734a300fbd8b8",
+    "concept_pick": "qwen-faithful-s22",
+    "omni_seed": 1,
+    "head_pass": false,
+    "face_pass": false,
+    "jaw_bones_declared": [],
+    "look": "lookC2",
+    "lod_triangles": [6002, 2002, 802],
+    "client_scale": 0.5,
+    "blender_generation_version": "unknown",
+    "generator_weights_revision": "unknown"
+  },
+  "dependencies": [],
+  "artifacts": [
+    {"role": "reference_glb", "path": "models/budge-dragon-hd.glb", "sha256": "a871f3f034223916673f56a0a888b0866478d1a5d6348a9d2c7341ce1bdb4d9f"}
+  ],
+  "runs": ["monster03-v0001-audit-20261018"],
+  "issues": ["Mouth appears nearly closed in supplied views and does not meet requested attack articulation quality.", "Wing-root light seam noted in inherited manifest.", "Inherited silhouette gate exceptions require fresh review for this project's fidelity goal."],
+  "quality": {"required": [], "results": []},
+  "review": {"decision": "pending", "by": null, "at": null, "evidence": ["demo/dragon-final-views.png"], "notes": "Historical package reports in-game acceptance, but this registry has not approved v0001."}
+}

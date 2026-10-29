@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "mu:monster:monster14",
+  "kind": "monster",
+  "slug": "monster14",
+  "name": "Elite Yeti",
+  "mu_id": 13,
+  "aliases": ["Elite Yeti"],
+  "current_version": "v0001",
+  "versions": ["v0001"],
+  "sources": [],
+  "origin_hint": "Original BMD is named Monster/Monster14.bmd in examples/monster14.yaml but has not been copied into this project.",
+  "references": ["examples/monster14.yaml", "demo/yeti-hd-demo.png"],
+  "tags": ["legacy-reference", "source-needed"]
+}

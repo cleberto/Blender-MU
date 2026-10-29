@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "asset_id": "mu:monster:monster03",
+  "target": {
+    "project": "D:/source/repos/Client Unity",
+    "editor_version_observed": "6000.7.0b1",
+    "urp_version_observed": "17.7.0",
+    "integration_state": "deferred_by_user_blender_validation_first",
+    "type_id": 2,
+    "legacy_model": "Monster03",
+    "legacy_prefab": "Assets/_Project/Characters/Monsters/Prefabs/Monster03.prefab",
+    "legacy_pipeline": "Assets/_Project/Scripts/Editor/Bmd/",
+    "legacy_presentation_policy": "preserve for A/B and rollback"
+  },
+  "source": {
+    "bmd": "assets/original/monster03/Monster03.bmd",
+    "candidate_glb": "models/budge-dragon-hd.glb",
+    "version_to_produce": "v0002"
+  },
+  "verified_structure": {
+    "lod_triangles": [6002, 2002, 802],
+    "bone_count": 39,
+    "action_count": 7,
+    "texture_edges_by_lod": [2048, 1024, 512],
+    "channels": ["base_color", "normal"],
+    "vertex_attributes": ["POSITION", "NORMAL", "TEXCOORD_0", "JOINTS_0", "WEIGHTS_0", "TANGENT"]
+  },
+  "must_measure_in_unity": [
+    "model importer accepts GLB or a controlled conversion is required",
+    "world-space height and footprint against legacy prefab",
+    "axis orientation, handedness, root pivot and foot contact",
+    "bone hierarchy, bind/rest matrices and skin deformation",
+    "action mapping, timing, loops and attack poses",
+    "map action00..action06 by clip name, never exported array order",
+    "fire effect socket position in action 3",
+    "URP color/normal orientation, roughness and alpha behavior",
+    "LOD screen transition and mouth visibility at normal camera",
+    "memory, draw calls and frame time with representative simultaneous dragons"
+  ],
+  "do_not_assume": [
+    "legacy scale 0.5 or 1/100 should be reapplied to the GLB",
+    "a glTF runtime package is installed",
+    "historical approval of the friend's GLB applies to Unity",
+    "a numeric silhouette score alone establishes quality"
+  ]
+}

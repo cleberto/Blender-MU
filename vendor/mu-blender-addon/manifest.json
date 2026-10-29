@@ -1,0 +1,108 @@
+{
+  "source": "D:/source/mu-blender-addon-main/io_scene_muonline",
+  "snapshot_date": "2026-10-18",
+  "reported_version": "0.1.0",
+  "scope": "BMD addon Python sources only; map editor excluded",
+  "files": [
+    {
+      "path": "io_scene_muonline/__init__.py",
+      "sha256": "bff7c8606cde96a194311909e927eb46a1655ede1400aa6540a3eac98ed51f8e"
+    },
+    {
+      "path": "io_scene_muonline/blender/__init__.py",
+      "sha256": "352ed3a121af09525c6540d392eea4e15ea3597aa11b71d302254998dc72816e"
+    },
+    {
+      "path": "io_scene_muonline/blender/operators.py",
+      "sha256": "c1b9c87008fdfa27f44de296f1f297bcdb2e7acc7459bf6a32c9aaab37fe8418"
+    },
+    {
+      "path": "io_scene_muonline/blender/panels.py",
+      "sha256": "cdbd07e5a6138236769854b9db55797019664f756887943f38254a729fbb141a"
+    },
+    {
+      "path": "io_scene_muonline/blender/properties.py",
+      "sha256": "842c696c6d7a29dea3a6c8a79c57f6abb699817296624296161b30a01fe3d945"
+    },
+    {
+      "path": "io_scene_muonline/crypto/__init__.py",
+      "sha256": "5b8886aad1fc27a8108adbbb4a88ef8b5c79c4bfb637b3bb702e6d3a2feb975b"
+    },
+    {
+      "path": "io_scene_muonline/crypto/cast5_cipher.py",
+      "sha256": "226e6d9546fbc584a82a6a94d33087d7cf2bec5eaee85a966860cfdd596bc811"
+    },
+    {
+      "path": "io_scene_muonline/crypto/file_cryptor.py",
+      "sha256": "c2a2aafcffd88c75d605829312629c72df92cf5ad693aaf13e252d5a60bf91fc"
+    },
+    {
+      "path": "io_scene_muonline/crypto/gost_cipher.py",
+      "sha256": "82c7ce35230489bc53aca6b498f6316f710ecd2bef224819004c440a4b740b6a"
+    },
+    {
+      "path": "io_scene_muonline/crypto/idea_cipher.py",
+      "sha256": "636462c2d92c2451aa0a0c7887760ae8b82fab9de9f300670aeb2c542e4f6412"
+    },
+    {
+      "path": "io_scene_muonline/crypto/lea256.py",
+      "sha256": "9491513a40c0cf9ae34914a339770018ca0f4e5f86822f7cf662c09a388f32a9"
+    },
+    {
+      "path": "io_scene_muonline/crypto/mars_cipher.py",
+      "sha256": "0c8918d8c9258b6f099e1b53b8932f0b7f1c348c8222d84d75c0160600416dbb"
+    },
+    {
+      "path": "io_scene_muonline/crypto/threeway_cipher.py",
+      "sha256": "b19f1b3970a614a72bcef7dfe9a9bdc9e8024594b90a4a3eee0b615b7a2f3109"
+    },
+    {
+      "path": "io_scene_muonline/exporter/__init__.py",
+      "sha256": "95a3d4c43dd286a5a35d11375889938aeaceab9505a21d5b2a1c909a66aacc56"
+    },
+    {
+      "path": "io_scene_muonline/exporter/bmd_exporter.py",
+      "sha256": "cdd982c13f654ea965addaad03ba894d31d0f2b96cc28ea3bdc7b10b953aab14"
+    },
+    {
+      "path": "io_scene_muonline/exporter/generic_bmd_exporter.py",
+      "sha256": "506f4bfef30aead0d600c515645867b2cd523c1cef3ee92b0f6a931394c5c8db"
+    },
+    {
+      "path": "io_scene_muonline/formats/__init__.py",
+      "sha256": "c40923a710672d42e2ca2d336313fd30172fceb38a4ee5cfbd801d4f88404752"
+    },
+    {
+      "path": "io_scene_muonline/formats/binary.py",
+      "sha256": "4dce5e5552c0e1160109300ac2df15dc7f4b22b4241732b71864ddc07fd2dd12"
+    },
+    {
+      "path": "io_scene_muonline/formats/bmd.py",
+      "sha256": "03ffaf05331fb6841a5ac6f1255167b221cad2b002cda4c0144f5afb1f8011bd"
+    },
+    {
+      "path": "io_scene_muonline/formats/textures.py",
+      "sha256": "9845caee250dab9783fb8317017146fd55052ab34e91ed28586859ad6e614400"
+    },
+    {
+      "path": "io_scene_muonline/importer/__init__.py",
+      "sha256": "851fe6fcb33d65494ca1336499345b3fe72f6cb23cb79f900dbe1ecb9d0c9ffc"
+    },
+    {
+      "path": "io_scene_muonline/importer/bmd_importer.py",
+      "sha256": "12dad3e0bc7e73c2b5c139c1b9f149d0b893d78e364e04db6344947758f7fdbe"
+    },
+    {
+      "path": "io_scene_muonline/utils/__init__.py",
+      "sha256": "760a59922e559574bb45a45ca1e3b4d127d84f8840582ed47a89e83a4344b7a2"
+    },
+    {
+      "path": "io_scene_muonline/utils/math_utils.py",
+      "sha256": "7a003dc85d841c2dfd179578a2f4cc9dabf56219ebc34bcdaba0a750e9887e4a"
+    },
+    {
+      "path": "io_scene_muonline/utils/naming.py",
+      "sha256": "540aa071958f4b72ce0e3831ade55a355e3900863571b680380aacdb62ebd768"
+    }
+  ]
+}

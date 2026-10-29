@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mu-asset-lab.local/schemas/version.schema.json",
+  "type": "object",
+  "required": ["schema_version", "asset_id", "version", "status", "created_at", "parent_version", "goal", "recipe", "recipe_sha256", "parameters", "artifacts", "issues", "quality", "review"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "asset_id": {"type": "string"},
+    "version": {"type": "string", "pattern": "^v[0-9]{4}$"},
+    "status": {"enum": ["reference", "draft", "review", "approved", "rejected"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "parent_version": {"type": ["string", "null"]},
+    "goal": {"type": "string"},
+    "recipe": {"type": ["string", "null"]},
+    "recipe_sha256": {"type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$"},
+    "parameters": {"type": "object"},
+    "dependencies": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "runs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "issues": {"type": "array", "items": {"type": "string"}},
+    "quality": {"type": "object", "required": ["required", "results"], "additionalProperties": false,
+      "properties": {"required": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "results": {"type": "array", "items": {"type": "object", "required": ["gate", "result", "evidence", "run_id"],
+          "additionalProperties": false, "properties": {"gate": {"type": "string"}, "result": {"enum": ["pass", "fail", "pending"]},
+            "evidence": {"type": "string"}, "run_id": {"type": "string"}}}}}},
+    "review": {"type": "object", "required": ["decision", "evidence"], "properties": {
+      "decision": {"enum": ["pending", "accepted", "rejected"]},
+      "by": {"type": ["string", "null"]},
+      "at": {"type": ["string", "null"]},
+      "evidence": {"type": "array", "items": {"type": "string"}},
+      "notes": {"type": "string"}
+    }, "additionalProperties": false}
+  },
+  "$defs": {"artifact": {"type": "object", "required": ["role", "path", "sha256"], "additionalProperties": false,
+    "properties": {"role": {"type": "string"}, "path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}}}}
+}

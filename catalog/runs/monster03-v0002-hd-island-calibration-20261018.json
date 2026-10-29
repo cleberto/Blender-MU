@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-hd-island-calibration-20261018",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "geometry",
+  "status": "completed",
+  "started_at": "2026-10-18T21:34:00-03:00",
+  "finished_at": "2026-10-18T21:45:00-03:00",
+  "goal": "Test intact lower-jaw islands in the inherited HD mesh without replacing its head and body",
+  "actor": "Codex",
+  "environment": {"blender": "5.2.2 LTS"},
+  "parameters": {
+    "mapping_script": "tools/map_hd_head_islands.py",
+    "color_script": "tools/render_head_island_probe.py",
+    "island_builder": "tools/build_hd_jaw_island_test.py",
+    "gradient_builder": "tools/build_hd_jaw_gradient_test.py",
+    "selected_connected_island_ranks": [5, 7],
+    "jaw_vertices": 148,
+    "jaw_faces": 216,
+    "gradient_full_bone02_below_y": -57,
+    "gradient_preserve_source_above_y": -42,
+    "island_blend_sha256": "995528A94F805F6F332DED34F3FDDF1DB5CC8FAA1DD289337C7E53B8CEA4705D",
+    "gradient_blend_sha256_before_weight_pruning": "782E94041EE9ED98F8D8678EE22EE7F8617F7E9FF075B9469BB51D049B19DED3"
+  },
+  "inputs": ["work/monster03/budge-dragon-baseline-v2.blend", "models/budge-dragon-hd.glb"],
+  "steps": ["Map connected HD head islands and bone influence", "Render color-coded regions", "Bind the two lower-jaw islands entirely to Bone02", "Test a spatial weight gradient", "Render idle and attack samples"],
+  "outputs": ["work/monster03/hd-head-islands.json", "work/monster03/head-island-probe/islands-000.png", "work/monster03/v0002-hd-jaw-island-test.blend", "work/monster03/v0002-hd-jaw-gradient-test.blend", "work/monster03/hd-jaw-island-test-report.json", "work/monster03/hd-jaw-gradient-test-report.json", "work/monster03/diagnostic-renders/hd-jaw-gradient-test/action03-frame00-side.png"],
+  "observations": [
+    "The inherited HD jaw contains two complete disconnected islands, allowing weight edits without cutting faces.",
+    "The whole-island test preserves idle visuals but creates a jagged cheek gap in attack poses.",
+    "The y-gradient reduces the posterior gap but retains a serrated lip line and fails action01 extremes.",
+    "Neither candidate contains modeled gums, palate, tongue or a volumetric cheek hinge."
+  ],
+  "checks": [
+    {"name": "preserve inherited head and body", "result": "pass", "evidence": "work/monster03/diagnostic-renders/hd-jaw-gradient-test/action00-frame00-side.png"},
+    {"name": "smooth mouth boundary in action03", "result": "fail", "evidence": "work/monster03/diagnostic-renders/hd-jaw-gradient-test/action03-frame00-side.png"},
+    {"name": "all-action jaw anatomy", "result": "fail", "evidence": "work/monster03/diagnostic-renders/hd-jaw-gradient-test/action01-frame25-side.png"}
+  ]
+}
