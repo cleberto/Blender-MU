@@ -26,7 +26,7 @@ Este documento contém somente invariantes globais. O procedimento executável p
 - Normal em Tangent Space e Non-Color, com bake high-to-low e cage adequados.
 - ORM: R = AO, G = Roughness, B = Metallic; Emission somente para emissivos reais.
 - Resolução e orçamento são definidos pelo asset e destino; 2K/4K de apresentação não é requisito universal de jogo.
-- Evitar metallic genérico em pele/membrana e brilho plástico. Avaliar sob luz neutra e na iluminação de destino.
+- Evitar metallic genérico em pele/membrana e brilho plástico. Avaliar sob luz neutra e na câmera do jogo.
 
 ## 4. Gates obrigatórios
 
