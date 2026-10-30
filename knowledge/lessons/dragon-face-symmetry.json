@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "dragon-face-symmetry",
+  "status": "verified",
+  "applies_to": ["mu:monster:monster03"],
+  "finding": "The inherited HD LOD0 head is measurably non-bilateral: all 974 evaluated non-center vertices influenced by Bip01 Head at weight >= 0.5 lacked a mirrored partner within the size-relative tolerance. This is a rest-mesh measurement, not merely a posed-render impression.",
+  "guidance": "Treat facial symmetry as a regional modeling/UV/rig task. Compare original and HD references, exempt intentional asymmetry, correct only affected regions and revalidate vertex pairs, UVs, normals and weights. Never run global Mesh > Symmetrize as an automatic repair. Reconcile this geometry correction with the separate mouth/hinge rebuild before baking or creating final LODs.",
+  "evidence": [
+    "catalog/runs/monster03-v0002-face-rig-audit-20261030.json",
+    "models/budge-dragon-hd.glb",
+    "tools/inspect_glb_symmetry.py",
+    "docs/dragon-v2-readiness.md"
+  ],
+  "superseded_by": null
+}
