@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "run_id": "monster03-v0002-face-rig-audit-20261030",
+  "asset_id": "mu:monster:monster03",
+  "version": "v0002",
+  "stage": "diagnosis",
+  "status": "completed",
+  "started_at": "2026-10-30T02:36:24+00:00",
+  "finished_at": "2026-10-30T02:36:24+00:00",
+  "goal": "Measure the reported facial asymmetry and consolidate the functional-mouth blocker without modifying the inherited GLB",
+  "actor": "Kimi",
+  "environment": {
+    "python": "3.12.12",
+    "analysis": "dependency-free GLB accessor inspection; Blender runtime not available in this execution"
+  },
+  "parameters": {
+    "script": "tools/inspect_glb_symmetry.py",
+    "script_sha256": "3073D7A817A8588AD931F1003E5BD4AAF48ECEBEC161F06AA87189A3D29B3F6D",
+    "source_sha256": "A871F3F034223916673F56A0A888B0866478D1A5D6348A9D2C7341CE1BDB4D9F",
+    "mesh": "LOD0",
+    "region_bone": "Bip01 Head",
+    "minimum_weight": 0.5,
+    "axis": "x",
+    "absolute_tolerance": 0.005,
+    "relative_tolerance": 0.001,
+    "effective_tolerance": 0.08498603533533175,
+    "region_vertices": 976,
+    "evaluated_vertices": 974,
+    "unmatched_vertices": 974,
+    "distance_median": 1.062354219896505,
+    "distance_max": 3.6264018417814206
+  },
+  "inputs": [
+    "models/budge-dragon-hd.glb",
+    "profiles/monster03.json",
+    "docs/monster03-v0002-experiments.md",
+    "catalog/runs/monster03-v0002-action-sweep-20261018.json"
+  ],
+  "steps": [
+    "Parse the unchanged GLB and select LOD0 head vertices by Bip01 Head influence",
+    "Measure nearest mirrored partners on X in rest mesh coordinates",
+    "Review prior jaw-channel and all-action findings",
+    "Add non-destructive diagnostics and agent instructions; do not alter or promote the model"
+  ],
+  "outputs": [
+    "tools/inspect_glb_symmetry.py",
+    "tools/validate_rig_symmetry.py",
+    "knowledge/lessons/dragon-face-symmetry.json"
+  ],
+  "observations": [
+    "All 974 evaluated non-center head vertices were outside the effective mirrored-pair tolerance; median nearest-partner distance 1.062354 and maximum 3.626402 GLB mesh units.",
+    "The measurement confirms geometric asymmetry but does not choose a donor side or prove that every difference is undesirable.",
+    "Prior evidence shows Bone02 rotates and has weights; the inherited fused mouth and hinge topology remain the functional blocker.",
+    "No candidate geometry was produced and no artistic, Unity or final approval is claimed.",
+    "The previous validator could sample only selected frames, associate the wrong armature, test a mesh against itself and return process success after a failed gate; it was replaced with explicit-role, all-frame validation."
+  ],
+  "checks": [
+    {
+      "name": "facial bilateral symmetry",
+      "result": "fail",
+      "evidence": "models/budge-dragon-hd.glb"
+    },
+    {
+      "name": "jaw animation channel present",
+      "result": "pass",
+      "evidence": "catalog/runs/monster03-v0002-action-sweep-20261018.json"
+    },
+    {
+      "name": "production mouth topology",
+      "result": "fail",
+      "evidence": "catalog/runs/monster03-v0002-mouth-topology-studies-20261018.json"
+    },
+    {
+      "name": "automatic donor-side or Symmetrize repair",
+      "result": "manual",
+      "evidence": "knowledge/lessons/dragon-face-symmetry.json"
+    },
+    {
+      "name": "Blender candidate deformation validation",
+      "result": "unknown",
+      "evidence": "tools/validate_rig_symmetry.py"
+    }
+  ],
+  "lessons": [
+    "knowledge/lessons/dragon-face-symmetry.json",
+    "knowledge/lessons/dragon-jaw-bone02.json"
+  ]
+}
