@@ -59,7 +59,8 @@
     "monster03-v0002-mouth-topology-studies-20261018",
     "monster03-v0002-body-preservation-20261018",
     "monster03-v0002-body-pbr-calibration-20261019",
-    "monster03-v0002-body-pbr-profile-replay-20261019"
+    "monster03-v0002-body-pbr-profile-replay-20261019",
+    "monster03-v0002-face-rig-audit-20261030"
   ],
   "issues": [
     "Awaiting matched BMD/GLB/Unity prefab attack-frame inspection and final effective parameters.",
@@ -71,7 +72,8 @@
     "Clamping negative Bone02 X rotation fixes sampled muzzle crossing but fails action01 pose alignment; keep only as a partial animation experiment.",
     "Simple weighted cheek bands failed as visible flaps. The hinge needs volumetric retopology, not a membrane strip.",
     "Calibrated visual base preserves inherited LOD0 exactly and marks only a mouth work guide; final jaw geometry remains to be built.",
-    "M03_BODY_PBR_01 is a preserved shader-only calibration study. It requires a human material review and target-runtime check; it does not resolve the mouth issue."
+    "M03_BODY_PBR_01 is a preserved shader-only calibration study. It requires a human material review and target-runtime check; it does not resolve the mouth issue.",
+    "Direct GLB audit measured head asymmetry (974/974 evaluated vertices unmatched); repair regionally with mouth rebuild, never global Symmetrize. See monster03-v0002-face-rig-audit-20261030."
   ],
   "quality": {
     "required": [

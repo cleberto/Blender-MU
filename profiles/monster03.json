@@ -22,14 +22,10 @@
     "legs": ["Bip01 L Thigh", "Bip01 R Thigh", "Bip01 L Foot", "Bip01 R Foot"]
   },
   "rig_constraints": {
-  "head": "Bone01",
-  "jaw": "Bone02",
-  "jaw_limits": {
-    "min_rotation_x": -35.0,
-    "max_rotation_x": 0.0
+    "head": "Bip01 Head",
+    "jaw": "Bone02",
+    "separate_mouth_mesh": true
   },
-  "separate_mouth_mesh": true
-},
   "requires_mouth_interior": true,
   "human_gates": ["head_and_mouth_in_motion", "body_wing_tail_silhouette", "game_camera_materials", "unity_ingame"],
   "notes": "The builder is a jaw-weight experiment. It does not claim a finished HD dragon; mouth topology, interior, all-action deformation and Unity remain incomplete."
