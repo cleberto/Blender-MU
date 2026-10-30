@@ -2,6 +2,8 @@
 
 Goal: rebuild and modernize MU assets with reproducible, reviewable evidence. Scope includes monsters, items, props, maps, effects, materials, shaders and animation.
 
+For any Blender modernization, follow `agent/blender-mu-modernization/SKILL.md` and `PIPELINE_STANDARDS.md`. Repair facial asymmetry regionally; never use global `Mesh > Symmetrize` as an automatic fix on a rigged/UV-mapped asset. A jaw animation channel is not proof of a functional mouth: validate separate upper/lower geometry and every frame of every declared action before surfacing.
+
 For the reusable monster build command and per-asset profiles, read `docs/monster-engine.md` and `profiles/<monster>.json`. A one-command run creates a candidate and audits it; it never implies artistic or in-game approval. Keep monster-specific fixes in their profile/builder until validated across assets.
 
 Start with `docs/architecture.md`. For Monster03, read `docs/dragon-v2-readiness.md`, `docs/monster03-v0002-experiments.md` and `docs/monster03-360-calibration.md` before editing: Unity/OpenMU is the eventual target, Blender-only validation is the current user preference, and the inherited GLB is the **visual baseline** for v0002 but not an approved final asset. Jaw splits plus two head/neck grafts have known failures. The parametric head is a mechanical study only; preserve the inherited HD cranium/body and retopologize the mouth locally. The board at `work/monster03/concepts/budge-head-realism-study01.png` is 2D guidance, not geometry. For a specific asset, run `py -3.9 tools/registry.py show <asset-id>` and read only the returned record, its selected version, recipe and relevant lessons. The large documents in `docs/hd-model-*.md` are inherited reference material; load only relevant sections.

@@ -16,6 +16,7 @@ O DOCX acerta ao separar remasterização visual do dado fixo do MU e ao apontar
 
 ## Achados do candidato
 
+- Auditoria de 2026-10-30 (`catalog/runs/monster03-v0002-face-rig-audit-20261030.json`): no LOD0, a região com peso ≥0,5 em `Bip01 Head` tem 976 vértices. Dos 974 avaliados fora da costura central, 974 não encontraram par espelhado dentro da tolerância efetiva de 0,084986 unidades de malha (0,005 absoluto ou 0,1% da diagonal da região, o que for maior). A distância mediana ao par mais próximo foi 1,062354 e a máxima 3,626402. Isso confirma assimetria geométrica mensurável, mas não autoriza escolher um lado nem executar Symmetrize global. Reproduzir com `tools/inspect_glb_symmetry.py`; corrigir por região e revisar UVs/pesos.
 - GLB: LOD0/1/2 de 6002/2002/802 triângulos, 39 juntas, sete ações, base color e normal por LOD, UV0 e tangentes. Isso prova presença de dados, não correção de deformação ou compatibilidade Unity.
 - O manifesto anterior desativou passes de cabeça e face e deixou `jaw: []`. Na prancha `demo/dragon-final-views.png`, a fenda da boca é estreita, dentes/interior não são verificáveis e o focinho parece rígido. A mandíbula é o primeiro bloqueio artístico e funcional.
 - `Bone02` possui animação e influência no GLB. Quatro reparos locais foram reprovados; a cabeça experimental de maxila/mandíbula separadas abre em poses de ataque, mas cruza o focinho em quadros intermediários. Uma cópia das animações com rotação negativa limitada resolve parte do cruzamento e ainda falha em poses extremas da ação 1. Exigir varredura de **todos os quadros das sete ações**, não apenas poses 3/4.
@@ -48,8 +49,8 @@ Triângulos, atlas, compressão e FPS serão limites **medidos** no protótipo U
 ## Ordem que evita refazer trabalho
 
 1. Fechar baseline e medir transformação/animações no Blender; o spike Unity fica para a fase de integração aprovada pelo usuário.
-2. A correção localizada já falhou; reconstruir cabeça, maxila, mandíbula e transição do pescoço em malhas planejadas, com chifres presos à superfície. A referência realista 2D em `work/monster03/concepts/` orienta arte, mas as dimensões BMD definem identidade. Verificar articulação em todas as ações antes de esculpir detalhes.
-3. Aprovar forma e movimento em cinza no LOD1 da câmera de jogo. Só então esculpir detalhe e produzir mapas PBR.
+2. A correção localizada já falhou; reconstruir cabeça, maxila, mandíbula e transição do pescoço em malhas planejadas, com chifres presos à superfície. Corrigir a assimetria facial por região, sem Symmetrize global, e revisar UVs/pesos após qualquer edição espelhada. A referência realista 2D em `work/monster03/concepts/` orienta arte, mas as dimensões BMD definem identidade. Verificar articulação em todas as ações antes de esculpir detalhes.
+3. Aprovar forma e movimento em cinza no LOD1 da câmera de jogo. Nomear `MOUTH_UPPER`/`MOUTH_LOWER`, criar os grupos `MOUTH_UPPER_RIM`/`MOUTH_LOWER_RIM` e executar `tools/validate_rig_symmetry.py`; colisão deve ser medida entre esses dois objetos, nunca pela malha contra ela mesma. Só então esculpir detalhe e produzir mapas PBR.
 4. Criar LODs após a forma final, sem perder fenda da boca e contorno das asas. Fazer testes em Unity e registrar defeitos por região/ação/LOD.
 5. Promover v0002 apenas quando todos os gates passarem e a aprovação humana estiver registrada. Variantes malsucedidas permanecem como runs.
 
