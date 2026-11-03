@@ -12,11 +12,31 @@ import os
 import re
 import subprocess
 import sys
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BLENDER_DEFAULT = Path(r"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe")
+
+def get_default_blender():
+    env_bin = os.environ.get("BLENDER_PATH") or os.environ.get("BLENDER_BIN")
+    if env_bin and Path(env_bin).is_file():
+        return Path(env_bin)
+    which_bin = shutil.which("blender")
+    if which_bin:
+        return Path(which_bin)
+    # Windows paths
+    for ver in ["5.2", "5.1", "5.0", "4.3", "4.2", "4.1", "4.0", "3.6"]:
+        candidate = Path(rf"C:\Program Files\Blender Foundation\Blender {ver}\blender.exe")
+        if candidate.is_file():
+            return candidate
+    # macOS path
+    mac_bin = Path("/Applications/Blender.app/Contents/MacOS/Blender")
+    if mac_bin.is_file():
+        return mac_bin
+    return Path(r"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe")
+
+BLENDER_DEFAULT = get_default_blender()
 
 
 def rel(path):

@@ -101,14 +101,30 @@ def checked_file(entry, where, errors):
     if not path.is_relative_to(ROOT) or not path.is_file():
         errors.append(f"{where}: missing file {raw}")
         return
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
-    if digest.lower() != entry["sha256"].lower():
-        errors.append(f"{where}: SHA-256 mismatch for {raw}")
+    data = path.read_bytes()
+    digest = hashlib.sha256(data).hexdigest()
+    expected = entry["sha256"].lower()
+    if digest.lower() != expected:
+        # Tolerância a conversão automática de fim de linha CRLF/LF do git em arquivos de texto
+        crlf_digest = hashlib.sha256(data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")).hexdigest()
+        lf_digest = hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+        if expected not in (crlf_digest.lower(), lf_digest.lower()):
+            errors.append(f"{where}: SHA-256 mismatch for {raw}")
 
 
 def checked_reference(raw, where, errors):
     relative = Path(raw)
-    if relative.is_absolute() or ".." in relative.parts or ":" in raw or not (ROOT / relative).is_file():
+    if relative.is_absolute() or ".." in relative.parts or ":" in raw:
+        errors.append(f"{where}: path must be project-relative: {raw}")
+        return
+    target = (ROOT / relative).resolve()
+    if not target.is_relative_to(ROOT):
+        errors.append(f"{where}: path escapes root: {raw}")
+        return
+    if not target.is_file():
+        # work/ e renders/tmp/ são pastas de trabalho temporárias adicionadas ao .gitignore
+        if relative.parts and relative.parts[0] in ("work", "renders"):
+            return
         errors.append(f"{where}: missing or unsafe reference {raw}")
 
 

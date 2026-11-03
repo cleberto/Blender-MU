@@ -6,7 +6,7 @@
   "status": "experimental",
   "source_scene": "work/monster03/budge-dragon-baseline-v2.blend",
   "source_glb": "models/budge-dragon-hd.glb",
-  "builder_script": "tools/build_hd_jaw_gradient_test.py",
+  "builder_script": "tools/build_hd_mouth_rig.py",
   "render_script": "tools/render_monster_pose_sheet.py",
   "compose_script": "tools/compose_monster_pose_sheet.py",
   "candidate_scene_name": "candidate.blend",

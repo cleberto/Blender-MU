@@ -1,75 +1,122 @@
+"""
+MU Asset Lab — Setup de Estúdio Master de Renderização
+Arquivo: tools/setup_mu_studio.py
+
+Configura automaticamente uma cena de apresentação nível Sketchfab/Colecionável:
+- Motor Cycles com AgX e Denoise
+- Iluminação 3 Pontos (Key 5500K, Fill 6500K fria, Rim 600W de recorte)
+- Câmera 85mm com foco e enquadramento automático no monstro/item
+"""
+
 import bpy
 import math
+from mathutils import Vector
 
 def setup_mu_master_studio():
-    # 1. Configuração do Motor de Render (Cycles + AgX)
-    scene = bpy.context.scene
-    scene.render.engine = 'CYCLES'
-    if hasattr(bpy.context.preferences.addons.get('cycles'), 'preferences'):
-        bpy.context.preferences.addons['cycles'].preferences.get_devices()
-        scene.cycles.device = 'GPU'
+    print("==================================================")
+    print("   MU Asset Lab — Configurando Estúdio Master    ")
+    print("==================================================")
     
+    scene = bpy.context.scene
+    
+    # 1. Configuração do Motor de Render (Cycles + AgX)
+    scene.render.engine = 'CYCLES'
+    
+    # Ativar GPU se disponível
+    try:
+        cycles_prefs = bpy.context.preferences.addons['cycles'].preferences
+        cycles_prefs.get_devices()
+        scene.cycles.device = 'GPU'
+        print("  [OK] GPU Compute ativado no Cycles.")
+    except Exception:
+        print("  [INFO] Usando CPU para renderização.")
+        
     scene.cycles.samples = 256
     scene.cycles.use_denoising = True
     scene.cycles.denoiser = 'OPENIMAGEDENOISE'
     
-    # Gerenciamento de Cores Profissional
+    # Color Management (AgX para cores sem estourar highlights)
     scene.view_settings.view_transform = 'AgX'
     scene.view_settings.look = 'Medium High Contrast'
     scene.view_settings.exposure = 0.0
+    scene.view_settings.gamma = 1.0
+    print("  [OK] Color Management: AgX Medium High Contrast configurado.")
     
-    # 2. Criar Coleção de Estúdio
+    # 2. Localizar o Monstro/Item para medir proporções
+    target_obj = None
+    for obj in scene.objects:
+        if obj.type == 'MESH' and obj.visible_get() and not obj.name.startswith("Icosphere"):
+            target_obj = obj
+            break
+            
+    # Centro e tamanho padrão caso não haja objeto selecionado
+    center = Vector((0.0, 0.0, 1.0))
+    height = 2.0
+    
+    if target_obj:
+        bbox = [target_obj.matrix_world @ Vector(corner) for corner in target_obj.bound_box]
+        center = sum(bbox, Vector()) / 8.0
+        min_z = min(corner.z for corner in bbox)
+        max_z = max(corner.z for corner in bbox)
+        height = max(0.5, max_z - min_z)
+        print(f"  [OK] Enquadrando asset: '{target_obj.name}' (Altura: {height:.2f}m)")
+
+    # 3. Criar ou Limpar Coleção do Estúdio
     col_name = "90_STUDIO_LIGHTS"
     col = bpy.data.collections.get(col_name)
     if not col:
         col = bpy.data.collections.new(col_name)
         scene.collection.children.link(col)
-    
-    # Limpar luzes e câmeras antigas do estúdio
+        
     for obj in list(col.objects):
         bpy.data.objects.remove(obj, do_unlink=True)
-        
-    # 3. Luz Principal (Key Light) - 45 graus, suave
-    key_data = bpy.data.lights.new(name="Key_Light", type='AREA')
-    key_data.energy = 350
-    key_data.size = 2.0
-    key_data.color = (1.0, 0.96, 0.92) # Luz ligeiramente quente
-    key_obj = bpy.data.objects.new("Key_Light", key_data)
-    key_obj.location = (-2.5, -2.5, 3.0)
-    key_obj.rotation_euler = (math.radians(50), math.radians(10), math.radians(-45))
+
+    # 4. Key Light (Luz Principal) - 45º à frente, quente suave
+    key_data = bpy.data.lights.new(name="MU_Key_Light", type='AREA')
+    key_data.energy = 250 * (height / 2.0)
+    key_data.size = height * 1.2
+    key_data.color = (1.0, 0.95, 0.9)
+    key_obj = bpy.data.objects.new("MU_Key_Light", key_data)
+    key_obj.location = center + Vector((-height * 1.5, -height * 1.8, height * 1.2))
+    key_obj.rotation_euler = (math.radians(50), math.radians(10), math.radians(-40))
     col.objects.link(key_obj)
-    
-    # 4. Luz de Preenchimento (Fill Light) - Suave e fria
-    fill_data = bpy.data.lights.new(name="Fill_Light", type='AREA')
-    fill_data.energy = 120
-    fill_data.size = 3.5
-    fill_data.color = (0.85, 0.92, 1.0) # Contraste frio
-    fill_obj = bpy.data.objects.new("Fill_Light", fill_data)
-    fill_obj.location = (3.0, -2.0, 1.5)
-    fill_obj.rotation_euler = (math.radians(65), math.radians(-10), math.radians(55))
+
+    # 5. Fill Light (Preenchimento) - Oposto à Key, fria suave
+    fill_data = bpy.data.lights.new(name="MU_Fill_Light", type='AREA')
+    fill_data.energy = 80 * (height / 2.0)
+    fill_data.size = height * 2.0
+    fill_data.color = (0.85, 0.92, 1.0)
+    fill_obj = bpy.data.objects.new("MU_Fill_Light", fill_data)
+    fill_obj.location = center + Vector((height * 2.0, -height * 1.5, height * 0.8))
+    fill_obj.rotation_euler = (math.radians(60), math.radians(-10), math.radians(50))
     col.objects.link(fill_obj)
-    
-    # 5. Luz de Recorte (Rim/Back Light) - Destacar silhueta e escamas
-    rim_data = bpy.data.lights.new(name="Rim_Light", type='SPOT')
-    rim_data.energy = 600
-    rim_data.spot_size = math.radians(60)
-    rim_data.spot_blend = 0.3
+
+    # 6. Rim/Back Light (Destaque de Silhueta / Escamas)
+    rim_data = bpy.data.lights.new(name="MU_Rim_Light", type='SPOT')
+    rim_data.energy = 450 * (height / 2.0)
+    rim_data.spot_size = math.radians(65)
+    rim_data.spot_blend = 0.4
     rim_data.color = (1.0, 1.0, 1.0)
-    rim_obj = bpy.data.objects.new("Rim_Light", rim_data)
-    rim_obj.location = (0.0, 3.5, 3.5)
-    rim_obj.rotation_euler = (math.radians(-45), 0, math.radians(180))
+    rim_obj = bpy.data.objects.new("MU_Rim_Light", rim_data)
+    rim_obj.location = center + Vector((0.0, height * 2.2, height * 1.5))
+    rim_obj.rotation_euler = (math.radians(-40), 0, math.radians(180))
     col.objects.link(rim_obj)
-    
-    # 6. Câmera Focal 85mm (Padrão Colecionável/Hero Shot)
-    cam_data = bpy.data.cameras.new("Hero_Camera")
+
+    # 7. Câmera Heroica (85mm, sem distorção de grande angular)
+    cam_data = bpy.data.cameras.new("MU_Hero_Camera")
     cam_data.lens = 85
-    cam_obj = bpy.data.objects.new("Hero_Camera", cam_data)
-    cam_obj.location = (0.0, -4.5, 1.2)
-    cam_obj.rotation_euler = (math.radians(82), 0, 0)
+    cam_obj = bpy.data.objects.new("MU_Hero_Camera", cam_data)
+    
+    dist_cam = height * 3.5
+    cam_obj.location = center + Vector((0.0, -dist_cam, height * 0.2))
+    cam_obj.rotation_euler = (math.radians(85), 0, 0)
     col.objects.link(cam_obj)
     scene.camera = cam_obj
     
-    print("[MU Studio] Estúdio mestre criado com sucesso!")
+    print("  [OK] Câmera 85mm posicionada e setada como ativa.")
+    print("==================================================")
+    print("  Estúdio Master criado e calibrado com sucesso!   ")
+    print("==================================================")
 
 if __name__ == "__main__":
     setup_mu_master_studio()

@@ -60,12 +60,22 @@ For Monster03, `Bone02` already rotates and has influence; the inherited continu
 
 Symmetry is a diagnostic gate, not a demand to make every creature mathematically bilateral.
 
-## 6. Run technical validation
+## 6. Run technical validation & mouth rig generation
+
+To generate anatomical mouth surfaces and rim groups automatically:
+
+```bash
+python tools/build_hd_mouth_rig.py --output work/monster03/candidate-mouth-rig.blend
+```
 
 From the repository root, with the candidate scene and real mouth objects:
 
 ```powershell
-blender work/<asset>/candidate.blend -b --python-exit-code 1 `
+# Ou via orquestrador unificado multiplataforma:
+python tools/run_pipeline.py validate --profile profiles/<asset>.json
+
+# Ou diretamente via Blender CLI:
+blender work/<asset>/candidate-mouth-rig.blend -b --python-exit-code 1 `
   --python tools/validate_rig_symmetry.py -- `
   --profile profiles/<asset>.json `
   --report work/<asset>/rig-validation.json `
